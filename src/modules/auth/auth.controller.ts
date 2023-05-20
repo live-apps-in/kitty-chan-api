@@ -8,7 +8,6 @@ export class AuthController {
   @Get('discord')
   @UseGuards()
   async discord(@Query('code') code: string) {
-    const auth = await this.authService.discordLogin(code);
-    return auth;
+    return this.authService.discordLogin(code);
   }
 }

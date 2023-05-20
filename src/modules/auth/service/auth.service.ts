@@ -8,6 +8,7 @@ import { PROVIDER_TYPES } from 'src/core/provider.types';
 import { Auth } from 'src/modules/auth/model/auth.model';
 import { DiscordAuthService } from 'src/modules/auth/service/discord_auth.service';
 import { UserRepository } from 'src/modules/users/repository/user.repo';
+import { UserService } from 'src/modules/users/service/user.service';
 import { v4 } from 'uuid';
 
 @Injectable()
@@ -19,6 +20,7 @@ export class AuthService {
     private readonly discordClient: Client,
     @Inject(UserRepository) private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
+    @Inject(UserService) private readonly userService: UserService,
     @InjectModel(Auth.name) private readonly authModel: Model<Auth>,
   ) {}
 
@@ -32,6 +34,7 @@ export class AuthService {
 
     ///Fnd or Create Local user
     let localUserId: string;
+
     const localUser = await this.userRepository.getByDiscordId(
       discordUserProfile.id,
     );
@@ -42,9 +45,16 @@ export class AuthService {
         name: discordUserProfile.username,
         discord: discordUserProfile,
       });
+
       localUserId = createdUser.id;
       await this.authModel.insertMany({ userId: createdUser._id });
     }
+
+    ///Sync User & Bot mutual guilds
+    await this.userService.syncMutualGuilds(
+      getToken.access_token,
+      new Types.ObjectId(localUserId),
+    );
 
     ///Create session for the user
     const sessionId = v4();

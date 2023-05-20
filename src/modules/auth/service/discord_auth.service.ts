@@ -12,7 +12,7 @@ export class DiscordAuthService {
     try {
       const response = await axios.post(
         `${this.DISCORD_OAUTH_URL}/token`,
-        `client_id=${this.DISCORD_CLIENT_ID}&client_secret=${this.DISCORD_CLIENT_SECRET}&grant_type=authorization_code&code=${code}&redirect_uri=${this.DISCORD_REDIRECT_URL}&scope=identify`,
+        `client_id=${this.DISCORD_CLIENT_ID}&client_secret=${this.DISCORD_CLIENT_SECRET}&grant_type=authorization_code&code=${code}&redirect_uri=${this.DISCORD_REDIRECT_URL}&scope=identify%20guilds`,
       );
 
       if (!response.data) {
