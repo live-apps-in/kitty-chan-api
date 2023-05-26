@@ -48,6 +48,11 @@ export class AuthService {
 
       localUserId = createdUser.id;
       await this.authModel.insertMany({ userId: createdUser._id });
+    } else {
+      //Update local Discord profile
+      await this.userRepository.update(new Types.ObjectId(localUserId), {
+        discord: discordUserProfile,
+      });
     }
 
     ///Sync User & Bot mutual guilds

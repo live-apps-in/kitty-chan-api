@@ -8,6 +8,9 @@ export class User {
   @Prop()
   name: string;
 
+  @Prop()
+  discordId: string;
+
   @Prop({ type: Object })
   discord: any;
 
