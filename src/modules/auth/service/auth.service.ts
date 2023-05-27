@@ -75,6 +75,7 @@ export class AuthService {
     await this.authModel.updateOne(
       { userId: new Types.ObjectId(localUserId) },
       {
+        discordAccessToken: getToken.access_token,
         $push: {
           sessions: sessionId,
         },

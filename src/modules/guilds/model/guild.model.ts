@@ -14,6 +14,12 @@ export class Guild {
   @Prop()
   ownerId: string;
 
+  @Prop()
+  icon: string;
+
+  @Prop({ type: Array<string> })
+  admins: string[];
+
   @Prop({ type: Object })
   features: any;
 

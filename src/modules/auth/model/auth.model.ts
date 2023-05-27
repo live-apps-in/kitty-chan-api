@@ -5,8 +5,11 @@ export type AuthDocument = HydratedDocument<Auth>;
 
 @Schema()
 export class Auth {
-  @Prop({ ref: 'users' })
+  @Prop({ ref: 'User' })
   userId: Types.ObjectId;
+
+  @Prop()
+  discordAccessToken: string;
 
   @Prop({ type: Array<any> })
   sessions: any[];
