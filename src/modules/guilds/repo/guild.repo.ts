@@ -78,4 +78,38 @@ export class GuildRepo {
       },
     ]);
   }
+
+  /**Get Guild with userId and guildId */
+  async getSingleUserGuild(guildId: string, discordId: string) {
+    const guilds = await this.guildModel.aggregate([
+      {
+        $match: {
+          guildId,
+          $or: [{ ownerId: discordId }, { admins: discordId }],
+        },
+      },
+      {
+        $addFields: {
+          userRole: {
+            $cond: [
+              { $eq: ['$ownerId', discordId] },
+              GUILD_USERS.guild_owner,
+              {
+                $cond: [
+                  { $in: [discordId, '$admins'] },
+                  GUILD_USERS.guild_admin,
+                  GUILD_USERS.guild_user,
+                ],
+              },
+            ],
+          },
+        },
+      },
+    ]);
+
+    if (guilds[0]) {
+      guilds[0].discordId = discordId;
+    }
+    return guilds[0];
+  }
 }

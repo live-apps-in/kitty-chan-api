@@ -15,6 +15,11 @@ export class GuildService {
     @InjectModel(Guild.name) private readonly guildModel: Model<Guild>,
   ) {}
 
+  async getGuildById(guildId: string) {
+    return this.discordClient.guild.fetch(guildId);
+  }
+
+  /**View all User guilds with user role */
   async getUserGuilds(userId: string) {
     return this.guildRepo.getAllUserGuild(new Types.ObjectId(userId));
   }

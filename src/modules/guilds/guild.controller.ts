@@ -1,5 +1,13 @@
-import { Controller, Get, Inject, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Request,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
+import { GuildUser } from 'src/modules/auth/guards/guild_user.guard';
 import { GuildService } from 'src/modules/guilds/service/guild.service';
 import { Req } from 'src/types/express.types';
 
@@ -9,9 +17,15 @@ export class GuildController {
     @Inject(GuildService) private readonly guildService: GuildService,
   ) {}
 
+  @Get('/:guildId')
+  @UseGuards(AuthGuard, GuildUser)
+  async guildId(@Param('guildId') guildId: string) {
+    return this.guildService.getGuildById(guildId);
+  }
+
   @Get()
   @UseGuards(AuthGuard)
-  async viewGuilds(@Request() req: Req) {
+  async viewUserGuilds(@Request() req: Req) {
     return this.guildService.getUserGuilds(req.userData.userId);
   }
 }
