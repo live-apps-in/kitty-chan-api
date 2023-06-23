@@ -6,4 +6,4 @@ RUN npm i
 COPY . .
 RUN npm run build
 CMD ["node", "./dist/main.js"]
-EXPOSE 5000
+EXPOSE 3000

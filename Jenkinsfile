@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Start New Container') {
             steps {
-                sh 'docker run -p 5010:5000 -d --restart always --name kittychan-api kittychan-api'
+                sh 'docker run -p 5001:3000 -d --restart always --name kittychan-api kittychan-api'
             }
         }
     }
