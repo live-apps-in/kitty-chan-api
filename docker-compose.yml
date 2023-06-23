@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  kittychan:
+    build: .
+    image: kittychan-api
+    container_name: kittychan-api
+    ports:
+      - "5001:3000"
+    networks:
+    - kittychan-network
+    restart: always
+
+networks:
+  kittychan-network:
+    name: kittychan-network
