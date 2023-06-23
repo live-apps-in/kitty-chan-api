@@ -59,7 +59,7 @@ export class GuildRepo {
                 $cond: [
                   { $in: ['$discordId', '$admins'] },
                   GUILD_USERS.guild_admin,
-                  GUILD_USERS.guild_user,
+                  GUILD_USERS.guild_member,
                 ],
               },
             ],
@@ -98,7 +98,7 @@ export class GuildRepo {
                 $cond: [
                   { $in: [discordId, '$admins'] },
                   GUILD_USERS.guild_admin,
-                  GUILD_USERS.guild_user,
+                  GUILD_USERS.guild_member,
                 ],
               },
             ],

@@ -8,7 +8,7 @@ const client = new Client({
   redisOptions: {
     db: 0,
     host: process.env.REDIS_HOST,
-    port: 6379,
+    port: (process.env.REDIS_PORT as any) || 6379,
     pass: process.env.REDIS_PASS,
   },
 });

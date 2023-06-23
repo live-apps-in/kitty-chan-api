@@ -16,7 +16,7 @@ export class GuildService {
   ) {}
 
   async getGuildById(guildId: string) {
-    return this.discordClient.guild.fetch(guildId);
+    return this.discordClient.guild.fetch(guildId, { expiry: 3600 });
   }
 
   /**View all User guilds with user role */
