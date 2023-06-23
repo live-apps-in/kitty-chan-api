@@ -4,7 +4,6 @@ import { Provider } from '@nestjs/common';
 const client = new Client({
   token: process.env.KITTY_CHAN_TOKEN,
   events: [],
-  sync: true,
   logs: false,
   redisOptions: {
     db: 0,
