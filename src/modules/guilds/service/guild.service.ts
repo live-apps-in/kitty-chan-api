@@ -1,5 +1,5 @@
 import { Client } from '@live-apps/discord';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { PROVIDER_TYPES } from 'src/core/provider.types';
@@ -16,7 +16,13 @@ export class GuildService {
   ) {}
 
   async getGuildById(guildId: string) {
-    return this.discordClient.guild.fetch(guildId, { expiry: 3600 });
+    return this.discordClient.guild
+      .fetch(guildId, { expiry: 3600 })
+      .catch((err) => {
+        if (err.status === 404) {
+          throw new ForbiddenException('Forbidden Guild Access');
+        }
+      });
   }
 
   /**View all User guilds with user role */
