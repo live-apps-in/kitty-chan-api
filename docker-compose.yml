@@ -5,7 +5,7 @@ services:
     image: kittychan-api
     container_name: kittychan-api
     ports:
-      - "5001:3000"
+      - "5000:3000"
     networks:
     - kittychan-network
     restart: always
