@@ -14,6 +14,11 @@ export class UserService {
     @Inject(GuildRepo) private readonly guildRepo: GuildRepo,
   ) {}
 
+  /**User Profile */
+  async profile(userId: Types.ObjectId) {
+    return this.userRepo.findById(userId);
+  }
+
   async syncMutualGuilds(accessToken: string, userId: Types.ObjectId) {
     const userGuilds = await this.discordClient.user.guilds(accessToken);
     if (!userGuilds) {

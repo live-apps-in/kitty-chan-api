@@ -14,6 +14,15 @@ export class UserRepository {
     return user.save();
   }
 
+  async findById(_id: Types.ObjectId) {
+    return this.userModel.findOne(
+      { _id },
+      {
+        guilds: 0,
+      },
+    );
+  }
+
   async getByDiscordId(discordId: string) {
     return this.userModel.findOne({ 'discord.id': discordId });
   }

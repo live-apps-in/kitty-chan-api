@@ -17,14 +17,14 @@ export class GuildController {
     @Inject(GuildService) private readonly guildService: GuildService,
   ) {}
 
-  @Get('/:guildId')
   @UseGuards(AuthGuard, GuildUser)
+  @Get('/:guildId')
   async guildId(@Param('guildId') guildId: string) {
     return this.guildService.getGuildById(guildId);
   }
 
-  @Get()
   @UseGuards(AuthGuard)
+  @Get()
   async viewUserGuilds(@Request() req: Req) {
     return this.guildService.getUserGuilds(req.userData.userId);
   }
