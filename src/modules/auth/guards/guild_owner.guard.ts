@@ -13,9 +13,9 @@ import { GuildRepo } from 'src/modules/guilds/repo/guild.repo';
 import { User } from 'src/modules/users/model/user.model';
 import { Req } from 'src/types/express.types';
 
-/**Checks if teh current user has admin access to this Guild */
+/**Checks if thh current user has owner/admin access to this Guild */
 @Injectable()
-export class GuildOwner implements CanActivate {
+export class GuildAdmin implements CanActivate {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
     @Inject(GuildRepo) private readonly guildRepo: GuildRepo,
@@ -26,7 +26,7 @@ export class GuildOwner implements CanActivate {
 
       const { discordId } = request.userData;
 
-      const guildId = request.params.guildId || request.body.guildId;
+      const guildId = request.headers['x-guild-id'] as string;
 
       if (!guildId) {
         throw new Error();

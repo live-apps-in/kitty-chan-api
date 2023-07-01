@@ -20,7 +20,7 @@ export class GuildUser implements CanActivate {
     try {
       const request: Req = context.switchToHttp().getRequest();
 
-      const guildId = request.params.guildId || request.body.guildId;
+      const guildId = request.headers['x-guild-id'];
 
       if (!guildId) {
         throw new Error();

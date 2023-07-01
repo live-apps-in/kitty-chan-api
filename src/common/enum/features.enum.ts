@@ -1,0 +1,5 @@
+/**Guild Features */
+export enum FeaturesEnum {
+  GREET = 'greet',
+  LOGGER = 'logger',
+}
