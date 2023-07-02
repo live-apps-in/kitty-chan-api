@@ -6,8 +6,10 @@ import {
   UseGuards,
   Param,
 } from '@nestjs/common';
+import { GuildAccess } from 'src/modules/auth/decorators/guild_access.decorator';
+import { GuildRoles } from 'src/modules/auth/decorators/guild_roles.decorator';
+import { ROLES } from 'src/common/enum/roles.enum';
 import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
-import { GuildUser } from 'src/modules/auth/guards/guild_user.guard';
 import { GuildService } from 'src/modules/guilds/service/guild.service';
 import { Req } from 'src/types/express.types';
 
@@ -17,7 +19,8 @@ export class GuildController {
     @Inject(GuildService) private readonly guildService: GuildService,
   ) {}
 
-  @UseGuards(AuthGuard, GuildUser)
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN, ROLES.GUILD_MEMBER)
   @Get('/:guildId')
   async guildId(@Param('guildId') guildId: string) {
     return this.guildService.getGuildById(guildId);

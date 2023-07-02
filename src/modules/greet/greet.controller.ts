@@ -10,8 +10,10 @@ import {
   ExtractContext,
   UserRequestContext,
 } from 'src/common/decorators/user-request-context';
+import { GuildAccess } from 'src/modules/auth/decorators/guild_access.decorator';
+import { GuildRoles } from 'src/modules/auth/decorators/guild_roles.decorator';
+import { ROLES } from 'src/common/enum/roles.enum';
 import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
-import { GuildAdmin } from 'src/modules/auth/guards/guild_owner.guard';
 import { GreetDto } from 'src/modules/greet/dto/Greet.dto';
 import { GreetService } from 'src/modules/greet/greet.service';
 
@@ -22,14 +24,16 @@ export class GreetController {
   ) {}
 
   /**View Greet Config */
-  @UseGuards(AuthGuard, GuildAdmin)
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
   @Get()
   async viewGreetConfig(@ExtractContext() { guildId }: UserRequestContext) {
     return this.greetService.viewGreet(guildId);
   }
 
   /**Edit Greet Config */
-  @UseGuards(AuthGuard, GuildAdmin)
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
   @Patch()
   async updateGreetConfig(
     @ExtractContext() { guildId }: UserRequestContext,

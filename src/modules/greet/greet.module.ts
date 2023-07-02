@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { GuildAdmin } from 'src/modules/auth/guards/guild_owner.guard';
 import { Auth, AuthSchema } from 'src/modules/auth/model/auth.model';
 import {
   Features,
@@ -22,7 +21,7 @@ import { User, UserSchema } from 'src/modules/users/model/user.model';
       { name: Features.name, schema: FeaturesSchema },
     ]),
   ],
-  providers: [GreetService, GuildAdmin, GuildRepo, FeaturesRepo],
+  providers: [GreetService, GuildRepo, FeaturesRepo],
   controllers: [GreetController],
 })
 export class GreetModule {}

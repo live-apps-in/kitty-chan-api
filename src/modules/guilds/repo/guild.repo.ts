@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Guild } from 'discord.js';
 import { Model, Types } from 'mongoose';
-import { GUILD_USERS } from 'src/core/constants';
+import { ROLES } from 'src/common/enum/roles.enum';
 import { User } from 'src/modules/users/model/user.model';
 
 @Injectable()
@@ -54,12 +54,12 @@ export class GuildRepo {
           userRole: {
             $cond: [
               { $eq: ['$ownerId', '$discordId'] },
-              GUILD_USERS.guild_owner,
+              ROLES.GUILD_OWNER,
               {
                 $cond: [
                   { $in: ['$discordId', '$admins'] },
-                  GUILD_USERS.guild_admin,
-                  GUILD_USERS.guild_member,
+                  ROLES.GUILD_ADMIN,
+                  ROLES.GUILD_MEMBER,
                 ],
               },
             ],
@@ -93,12 +93,12 @@ export class GuildRepo {
           userRole: {
             $cond: [
               { $eq: ['$ownerId', discordId] },
-              GUILD_USERS.guild_owner,
+              ROLES.GUILD_OWNER,
               {
                 $cond: [
                   { $in: [discordId, '$admins'] },
-                  GUILD_USERS.guild_admin,
-                  GUILD_USERS.guild_member,
+                  ROLES.GUILD_ADMIN,
+                  ROLES.GUILD_MEMBER,
                 ],
               },
             ],

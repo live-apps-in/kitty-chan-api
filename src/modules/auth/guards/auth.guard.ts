@@ -39,7 +39,9 @@ export class AuthGuard implements CanActivate {
       });
       if (!userAuth) throw new Error();
 
-      request.userData = decoded;
+      const guildId = request.headers['x-guild-id'] as string;
+      request.userData = { ...decoded, guildId };
+
       return true;
     } catch (error) {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
