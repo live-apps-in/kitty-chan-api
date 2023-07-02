@@ -1,8 +1,18 @@
+import { DiscordEmbeds } from '@live-apps/discord';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 
 @Schema()
 export class Template {
+  @Prop()
+  name: string;
+
+  @Prop()
+  description: string;
+
+  @Prop({ default: false })
+  isActive: boolean;
+
   @Prop()
   type: string;
 
@@ -10,7 +20,22 @@ export class Template {
   target: string;
 
   @Prop()
-  guildId: Types.ObjectId;
+  content: string;
+
+  @Prop({ type: Object })
+  embed: DiscordEmbeds;
+
+  @Prop()
+  guildId: string;
+
+  @Prop()
+  userId: Types.ObjectId;
+
+  @Prop({ default: false })
+  community: boolean;
+
+  @Prop({ default: null })
+  forkedFrom: Types.ObjectId;
 }
 
 export const TemplateSchema = SchemaFactory.createForClass(Template);

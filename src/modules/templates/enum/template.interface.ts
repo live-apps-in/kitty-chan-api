@@ -3,6 +3,11 @@ export enum TemplateType {
   EMBED = 'embed',
 }
 
+export enum TemplateSrc {
+  PLAIN = 'default',
+  EMBED = 'custom',
+}
+
 export enum TemplateTarget {
   /**Welcome/Leave */
   welcomeMessage = 'welcomeMessage',

@@ -1,11 +1,27 @@
-import { IsEnum, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateIf,
+} from 'class-validator';
+import { Types } from 'mongoose';
 import {
   TemplateTarget,
   TemplateType,
-} from 'src/modules/templates/interface/template.interface';
+} from 'src/modules/templates/enum/template.interface';
 
 export class TemplateDto {
   @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsOptional()
+  @IsString()
+  description: string;
+
+  isActive: string;
+
   @IsEnum(TemplateType)
   type: TemplateType;
 
@@ -22,4 +38,12 @@ export class TemplateDto {
   @ValidateIf((o) => o.type === TemplateType.EMBED)
   @IsString()
   embed: string;
+
+  guildId: string;
+
+  userId: string;
+
+  community: boolean;
+
+  forkedFrom: Types.ObjectId;
 }
