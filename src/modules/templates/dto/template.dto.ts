@@ -1,3 +1,5 @@
+import { DiscordEmbeds } from '@live-apps/discord';
+import { Type } from 'class-transformer';
 import {
   IsEnum,
   IsNotEmpty,
@@ -36,8 +38,8 @@ export class TemplateDto {
 
   @IsNotEmpty()
   @ValidateIf((o) => o.type === TemplateType.EMBED)
-  @IsString()
-  embed: string;
+  @Type(() => Object)
+  embed: DiscordEmbeds;
 
   guildId: string;
 

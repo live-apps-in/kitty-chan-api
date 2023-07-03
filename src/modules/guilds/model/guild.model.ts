@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { GuildAdminDto } from 'src/modules/guilds/dto/GuildAdmin.dto';
 
 export type GuildDocument = HydratedDocument<Guild>;
 
@@ -17,8 +18,8 @@ export class Guild {
   @Prop()
   icon: string;
 
-  @Prop({ type: Array<string> })
-  admins: string[];
+  @Prop({ type: Array<GuildAdminDto> })
+  admins: GuildAdminDto[];
 
   @Prop({ type: Object })
   features: any;

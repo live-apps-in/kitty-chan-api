@@ -4,8 +4,8 @@ export enum TemplateType {
 }
 
 export enum TemplateSrc {
-  PLAIN = 'default',
-  EMBED = 'custom',
+  DEFAULT = 'default',
+  CUSTOM = 'custom',
 }
 
 export enum TemplateTarget {

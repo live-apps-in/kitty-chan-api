@@ -1,8 +1,14 @@
 import { Client } from '@live-apps/discord';
-import { Injectable, Inject, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  ForbiddenException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { PROVIDER_TYPES } from 'src/core/provider.types';
+import { GuildAdminDto } from 'src/modules/guilds/dto/GuildAdmin.dto';
 import { Guild } from 'src/modules/guilds/model/guild.model';
 import { GuildRepo } from 'src/modules/guilds/repo/guild.repo';
 
@@ -30,7 +36,36 @@ export class GuildService {
     return this.guildRepo.getAllUserGuild(new Types.ObjectId(userId));
   }
 
-  /**Not for regular use(Expensive Call)
+  /**Guild Admin */
+  async addGuildAdmin(guildId: string, guildAdminDto: GuildAdminDto) {
+    const guildAdmin = await this.guildModel.findOne({
+      guildId,
+      'admins.userId': guildAdminDto.userId,
+    });
+    if (guildAdmin) {
+      throw new ConflictException('Admin already exists');
+    }
+
+    await this.guildModel.updateOne(
+      { guildId },
+      {
+        $push: {
+          admins: { ...guildAdminDto },
+        },
+      },
+    );
+  }
+
+  async updateGuildAdmin(guildId: string, guildAdminDto: GuildAdminDto) {
+    await this.guildModel.updateOne(
+      { guildId, 'admins.userId': guildAdminDto.userId },
+      {
+        $set: { 'admins.$': guildAdminDto },
+      },
+    );
+  }
+
+  /**
    * Use for migration or scheduled sync
    */
   private async syncLocalGuilds() {
