@@ -34,9 +34,15 @@ export class GuildPermsService {
     );
   }
 
-  async updateGuildAdmin(guildId: string, guildAdminDto: GuildAdminDto) {
+  async updateGuildAdmin(
+    guildId: string,
+    userId: string,
+    guildAdminDto: GuildAdminDto,
+  ) {
+    guildAdminDto.userId = userId;
+
     await this.guildModel.updateOne(
-      { guildId, 'admins.userId': guildAdminDto.userId },
+      { guildId, 'admins.userId': userId },
       {
         $set: { 'admins.$': guildAdminDto },
       },

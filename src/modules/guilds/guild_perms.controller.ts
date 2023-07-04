@@ -41,12 +41,17 @@ export class GuildPermsController {
 
   @UseGuards(AuthGuard, GuildAccess)
   @GuildRoles(ROLES.GUILD_OWNER)
-  @Patch('admin')
+  @Patch('admin/:userId')
   async updateAdmin(
     @ExtractContext() { guildId }: UserRequestContext,
+    @Param('userId') userId: string,
     @Body() guildAdminDto: GuildAdminDto,
   ) {
-    return this.guildPermsService.updateGuildAdmin(guildId, guildAdminDto);
+    return this.guildPermsService.updateGuildAdmin(
+      guildId,
+      userId,
+      guildAdminDto,
+    );
   }
 
   @UseGuards(AuthGuard, GuildAccess)
