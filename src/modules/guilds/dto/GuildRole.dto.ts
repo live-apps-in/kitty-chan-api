@@ -7,9 +7,11 @@ export class GuildRoleDto {
 
   @IsNotEmpty()
   @IsObject()
-  permission: any;
+  permissions: any;
 
   @IsNotEmpty()
   @IsString()
   guildId: string;
+
+  systemRole: boolean;
 }

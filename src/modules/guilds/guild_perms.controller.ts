@@ -7,6 +7,7 @@ import {
   Post,
   Param,
   Delete,
+  Get,
 } from '@nestjs/common';
 import { GuildAccess } from 'src/modules/auth/decorators/guild_access.decorator';
 import { GuildRoles } from 'src/modules/auth/decorators/guild_roles.decorator';
@@ -18,6 +19,7 @@ import {
 } from 'src/common/decorators/user-request-context';
 import { GuildAdminDto } from 'src/modules/guilds/dto/GuildAdmin.dto';
 import { GuildPermsService } from 'src/modules/guilds/service/guild_perms.service';
+import { GuildRoleDto } from 'src/modules/guilds/dto/GuildRole.dto';
 
 @Controller('/guild')
 export class GuildPermsController {
@@ -55,5 +57,44 @@ export class GuildPermsController {
     @Param('userId') userId: string,
   ) {
     return this.guildPermsService.deleteGuildAdmin(guildId, userId);
+  }
+
+  /**Guild Role */
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER)
+  @Post('role')
+  async addRole(
+    @ExtractContext() { guildId }: UserRequestContext,
+    @Body() guildRoleDto: GuildRoleDto,
+  ) {
+    return this.guildPermsService.addGuildRole(guildId, guildRoleDto);
+  }
+
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER)
+  @Get('role')
+  async viewRole(@ExtractContext() { guildId }: UserRequestContext) {
+    return this.guildPermsService.viewRoles(guildId);
+  }
+
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER)
+  @Patch('role/:roleId')
+  async updateRole(
+    @ExtractContext() { guildId }: UserRequestContext,
+    @Param('roleId') roleId: string,
+    @Body() guildRoleDto: GuildRoleDto,
+  ) {
+    return this.guildPermsService.updateRole(guildId, roleId, guildRoleDto);
+  }
+
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER)
+  @Delete('role/:roleId')
+  async deleteRole(
+    @ExtractContext() { guildId }: UserRequestContext,
+    @Param('roleId') roleId: string,
+  ) {
+    return this.guildPermsService.deleteRole(guildId, roleId);
   }
 }

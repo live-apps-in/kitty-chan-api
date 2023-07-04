@@ -4,6 +4,7 @@ import { Auth, AuthSchema } from 'src/modules/auth/model/auth.model';
 import { GuildController } from 'src/modules/guilds/guild.controller';
 import { GuildPermsController } from 'src/modules/guilds/guild_perms.controller';
 import { Guild, GuildSchema } from 'src/modules/guilds/model/guild.model';
+import { Roles, RolesSchema } from 'src/modules/guilds/model/roles.model';
 import { GuildRepo } from 'src/modules/guilds/repo/guild.repo';
 import { GuildService } from 'src/modules/guilds/service/guild.service';
 import { GuildPermsService } from 'src/modules/guilds/service/guild_perms.service';
@@ -16,9 +17,10 @@ import { DiscordProvider } from 'src/providers/discord.provider';
       { name: Auth.name, schema: AuthSchema },
       { name: User.name, schema: UserSchema },
       { name: Guild.name, schema: GuildSchema },
+      { name: Roles.name, schema: RolesSchema },
     ]),
   ],
-  controllers: [GuildController, GuildPermsController],
+  controllers: [GuildPermsController, GuildController],
   providers: [GuildService, GuildPermsService, GuildRepo, DiscordProvider],
   exports: [GuildRepo],
 })

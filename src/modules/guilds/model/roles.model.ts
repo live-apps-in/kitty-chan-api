@@ -5,11 +5,14 @@ export class Roles {
   @Prop()
   name: string;
 
-  @Prop()
+  @Prop({ type: Object })
   permissions: any;
 
   @Prop()
   guildId: string;
+
+  @Prop({ default: false })
+  systemRole: boolean;
 }
 
 export const RolesSchema = SchemaFactory.createForClass(Roles);
