@@ -38,7 +38,7 @@ export class GuildAccess implements CanActivate {
     );
 
     if (!guild || ![...requiredRoles].includes(guild.userRole)) {
-      throw new Error();
+      throw new ForbiddenException('Forbidden Guild Access');
     }
 
     return true;
