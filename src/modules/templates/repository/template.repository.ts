@@ -19,4 +19,17 @@ export class TemplateRepo {
   async findByGuildAndTarget(guildId: string, target: TemplateTarget) {
     return this.templateModel.find({ guildId, target });
   }
+
+  async update(templateId: string, templateDto: TemplateDto) {
+    return this.templateModel.updateOne(
+      { _id: templateId },
+      {
+        $set: templateDto,
+      },
+    );
+  }
+
+  async delete(templateId: string) {
+    await this.templateModel.deleteOne({ _id: templateId });
+  }
 }

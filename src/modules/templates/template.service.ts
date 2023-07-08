@@ -19,4 +19,12 @@ export class TemplateService {
   async getByGuildAndTarget(guildId: string, templateTarget: TemplateTarget) {
     return this.templateRepo.findByGuildAndTarget(guildId, templateTarget);
   }
+
+  async update(templateId: string, templateDto: TemplateDto) {
+    await this.templateRepo.update(templateId, templateDto);
+  }
+
+  async delete(templateId: string) {
+    await this.templateRepo.delete(templateId);
+  }
 }

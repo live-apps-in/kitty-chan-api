@@ -9,8 +9,10 @@ export enum TemplateSrc {
 }
 
 export enum TemplateTarget {
-  /**Welcome/Leave */
+  /**Greet */
   welcomeMessage = 'welcomeMessage',
+  welcome = 'welcome',
+  farewell = 'farewell',
 
   /**Logs */
   messageUpdate = 'messageUpdate',

@@ -22,8 +22,6 @@ export class TemplateDto {
   @IsString()
   description: string;
 
-  isActive: string;
-
   @IsEnum(TemplateType)
   type: TemplateType;
 

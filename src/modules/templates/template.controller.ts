@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -43,5 +45,22 @@ export class TemplateController {
     @Param('target') templateTarget: TemplateTarget,
   ) {
     return this.templateService.getByGuildAndTarget(guildId, templateTarget);
+  }
+
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Patch(':templateId')
+  async update(
+    @Body() templateDto: TemplateDto,
+    @Param('templateId') templateId: string,
+  ) {
+    return this.templateService.update(templateId, templateDto);
+  }
+
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Delete(':templateId')
+  async delete(@Param('templateId') templateId: string) {
+    return this.templateService.delete(templateId);
   }
 }

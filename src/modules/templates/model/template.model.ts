@@ -10,9 +10,6 @@ export class Template {
   @Prop()
   description: string;
 
-  @Prop({ default: false })
-  isActive: boolean;
-
   @Prop()
   type: string;
 
