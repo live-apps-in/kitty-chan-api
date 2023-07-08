@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { GuildModule } from 'src/modules/guilds/guild.module';
 import { GreetModule } from 'src/modules/greet/greet.module';
 import { TemplateModule } from 'src/modules/templates/templates.module';
+import { LoggerModule } from 'src/modules/logger/logger.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { TemplateModule } from 'src/modules/templates/templates.module';
     AuthModule,
     GuildModule,
     GreetModule,
+    LoggerModule,
     TemplateModule,
   ],
   controllers: [AppController],

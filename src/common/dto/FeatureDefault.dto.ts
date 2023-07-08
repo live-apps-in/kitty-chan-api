@@ -1,19 +1,19 @@
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 /**Fundamental fields for Features */
 export class FeatureDefault {
-  @IsOptional()
+  @IsNotEmpty()
   @IsBoolean()
   public isActive: boolean;
 }
 
 /**Features which has access to Message templates */
 export class FeatDefaultWithTemplates extends FeatureDefault {
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   public channelId: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   public templateId: string;
 }
