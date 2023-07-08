@@ -1,7 +1,7 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { FeaturesEnum } from "src/common/enum/features.enum";
-import { FeaturesRepo } from "src/modules/features/repository/features.repo";
-import { LoggerDto } from "src/modules/logger/dto/Logger.dto";
+import { Inject, Injectable } from '@nestjs/common';
+import { FeaturesEnum } from 'src/common/enum/features.enum';
+import { FeaturesRepo } from 'src/modules/features/repository/features.repo';
+import { LoggerDto } from 'src/modules/logger/dto/Logger.dto';
 
 @Injectable()
 export class LoggerService {

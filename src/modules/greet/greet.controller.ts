@@ -39,6 +39,7 @@ export class GreetController {
     @ExtractContext() { guildId }: UserRequestContext,
     @Body() greetUpdateDto: GreetDto,
   ) {
-    return this.greetService.updateGreet(guildId, greetUpdateDto);
+    await this.greetService.updateGreet(guildId, greetUpdateDto);
+    return greetUpdateDto;
   }
 }

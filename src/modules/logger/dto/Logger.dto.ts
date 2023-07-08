@@ -1,4 +1,9 @@
-import { IsBoolean, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { FeatDefaultWithTemplates } from 'src/common/dto/FeatureDefault.dto';
 

@@ -54,7 +54,8 @@ export class TemplateController {
     @Body() templateDto: TemplateDto,
     @Param('templateId') templateId: string,
   ) {
-    return this.templateService.update(templateId, templateDto);
+    await this.templateService.update(templateId, templateDto);
+    return templateDto;
   }
 
   @UseGuards(AuthGuard, GuildAccess)
