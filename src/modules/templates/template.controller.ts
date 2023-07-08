@@ -13,7 +13,7 @@ import {
   ExtractContext,
   UserRequestContext,
 } from 'src/common/decorators/user-request-context';
-import { GuildAccess } from 'src/modules/auth/decorators/guild_access.decorator';
+import { GuildAccess } from 'src/modules/auth/guards/guild_access.guard';
 import { GuildRoles } from 'src/modules/auth/decorators/guild_roles.decorator';
 import { ROLES } from 'src/common/enum/roles.enum';
 import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
