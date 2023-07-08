@@ -39,6 +39,7 @@ export class LoggerController {
     @ExtractContext() { guildId }: UserRequestContext,
     @Body() loggerUpdateDto: LoggerDto,
   ) {
-    return this.loggerService.updateLogger(guildId, loggerUpdateDto);
+    await this.loggerService.updateLogger(guildId, loggerUpdateDto);
+    return loggerUpdateDto;
   }
 }
