@@ -49,6 +49,13 @@ export class TemplateController {
 
   @UseGuards(AuthGuard, GuildAccess)
   @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Get(':targetId/view')
+  async getSingle(@Param('targetId') templateId: string) {
+    return this.templateService.getByTemplateId(templateId);
+  }
+
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
   @Patch(':templateId')
   async update(
     @Body() templateDto: TemplateDto,

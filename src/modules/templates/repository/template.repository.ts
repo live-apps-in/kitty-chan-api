@@ -16,6 +16,10 @@ export class TemplateRepo {
     return new this.templateModel(templateDto).save();
   }
 
+  async findById(templateId: string) {
+    return this.templateModel.findOne({ _id: templateId });
+  }
+
   async findByGuildAndTarget(guildId: string, target: TemplateTarget) {
     return this.templateModel.find({ guildId, target });
   }

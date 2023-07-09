@@ -16,6 +16,10 @@ export class TemplateService {
     return this.templateRepo.create(templateDto);
   }
 
+  async getByTemplateId(templateId: string) {
+    return this.templateRepo.findById(templateId);
+  }
+
   async getByGuildAndTarget(guildId: string, templateTarget: TemplateTarget) {
     return this.templateRepo.findByGuildAndTarget(guildId, templateTarget);
   }
