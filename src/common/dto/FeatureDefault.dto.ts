@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
 
 /**Fundamental fields for Features */
 export class FeatureDefault {
@@ -10,10 +10,12 @@ export class FeatureDefault {
 /**Features which has access to Message templates */
 export class FeatDefaultWithTemplates extends FeatureDefault {
   @IsNotEmpty()
+  @ValidateIf((o) => o !== null)
   @IsString()
   public channelId: string;
 
   @IsNotEmpty()
+  @ValidateIf((o) => o !== null)
   @IsString()
   public templateId: string;
 }
