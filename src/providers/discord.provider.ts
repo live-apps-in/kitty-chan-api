@@ -1,5 +1,6 @@
 import { Client } from '@live-apps/discord';
 import { Provider } from '@nestjs/common';
+import { PROVIDER_TYPES } from 'src/core/provider.types';
 
 const client = new Client({
   token: process.env.KITTY_CHAN_TOKEN,
@@ -14,6 +15,6 @@ const client = new Client({
 });
 
 export const DiscordProvider: Provider = {
-  provide: 'LIVE_APPS_DISCORD',
+  provide: PROVIDER_TYPES.DiscordClient,
   useValue: client,
 };

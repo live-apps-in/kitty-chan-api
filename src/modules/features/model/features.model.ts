@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { GreetDto } from 'src/modules/greet/dto/Greet.dto';
+import { LanguageDto } from 'src/modules/language/dto/language.dto';
 
 const featureDefaultPerms = {
   isActive: false,
@@ -20,6 +21,9 @@ export class Features {
 
   @Prop({ type: GreetDto, default: featureDefaultPerms })
   greet: GreetDto;
+
+  @Prop({ type: LanguageDto, default: { isActive: false } })
+  language: LanguageDto;
 }
 
 export const FeaturesSchema = SchemaFactory.createForClass(Features);
