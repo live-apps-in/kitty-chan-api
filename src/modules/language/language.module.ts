@@ -11,8 +11,14 @@ import { FeaturesRepo } from 'src/modules/features/repository/features.repo';
 import { GuildModule } from 'src/modules/guilds/guild.module';
 import { GuildSchema } from 'src/modules/guilds/model/guild.model';
 import { RolesSchema } from 'src/modules/guilds/model/roles.model';
+import { CustomLangFilterController } from 'src/modules/language/custom_lang_filter.controller';
+import { CustomLangFilterService } from 'src/modules/language/custom_lang_filter.service';
 import { LanguageController } from 'src/modules/language/language.controller';
 import { LanguageService } from 'src/modules/language/language.service';
+import {
+  DataLibs,
+  DataLibsSchema,
+} from 'src/modules/language/models/data_libs.model';
 import { UserSchema } from 'src/modules/users/model/user.model';
 import { RedisProvider } from 'src/providers/redis.provider';
 
@@ -24,10 +30,16 @@ import { RedisProvider } from 'src/providers/redis.provider';
       { name: User.name, schema: UserSchema },
       { name: Roles.name, schema: RolesSchema },
       { name: Features.name, schema: FeaturesSchema },
+      { name: DataLibs.name, schema: DataLibsSchema },
     ]),
     GuildModule,
   ],
-  providers: [LanguageService, FeaturesRepo, RedisProvider],
-  controllers: [LanguageController],
+  providers: [
+    LanguageService,
+    CustomLangFilterService,
+    FeaturesRepo,
+    RedisProvider,
+  ],
+  controllers: [LanguageController, CustomLangFilterController],
 })
 export class LanguageModule {}
