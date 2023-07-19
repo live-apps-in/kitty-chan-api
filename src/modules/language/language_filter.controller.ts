@@ -7,35 +7,35 @@ import { ROLES } from 'src/common/enum/roles.enum';
 import { GuildRoles } from 'src/modules/auth/decorators/guild_roles.decorator';
 import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
 import { GuildAccess } from 'src/modules/auth/guards/guild_access.guard';
-import { CustomLangFilterService } from 'src/modules/language/custom_lang_filter.service';
-import { CustomLangFilterDto } from 'src/modules/language/dto/custom_lang_filter.dto';
+import { LanguageFilterService } from 'src/modules/language/language_filter.service';
+import { DataLibsDto } from 'src/modules/language/dto/data_libs.dto';
 
 @Controller('custom_language')
-export class CustomLangFilterController {
+export class LanguageFilterController {
   constructor(
-    @Inject(CustomLangFilterService)
-    private readonly customLangFilterService: CustomLangFilterService,
+    @Inject(LanguageFilterService)
+    private readonly langFilterService: LanguageFilterService,
   ) {}
 
   /**View custom Language filter*/
   @UseGuards(AuthGuard, GuildAccess)
   @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
-  @Get()
+  @Get('/filters')
   async viewCustomFilter(@ExtractContext() { guildId }: UserRequestContext) {
-    return this.customLangFilterService.viewCustomFilter(guildId);
+    return this.langFilterService.viewCustomFilter(guildId);
   }
 
   /**View custom Language filter*/
   @UseGuards(AuthGuard, GuildAccess)
   @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
-  @Post()
+  @Post('/filters')
   async addCustomFilter(
     @ExtractContext() { guildId }: UserRequestContext,
-    @Body() createCustomLangFilterDto: CustomLangFilterDto,
+    @Body() languageFilterDto: DataLibsDto,
   ) {
-    return this.customLangFilterService.createCustomFilter(
+    return this.langFilterService.createCustomFilter(
       guildId,
-      createCustomLangFilterDto,
+      languageFilterDto,
     );
   }
 }

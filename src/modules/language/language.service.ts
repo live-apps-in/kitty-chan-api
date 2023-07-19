@@ -28,9 +28,17 @@ export class LanguageService {
       languageUpdateDto,
     );
 
-    await this.redisClient.set(
-      `guild-${guildId}:feature:strongLanguage`,
-      languageUpdateDto.strongLanguage.isActive.toString(),
-    );
+    //Update Feature Flag Cache
+    await Promise.all([
+      this.redisClient.set(
+        `guild-${guildId}:feature:strongLanguage`,
+        languageUpdateDto.strongLanguage.isActive.toString(),
+      ),
+
+      this.redisClient.set(
+        `guild-${guildId}:feature:languageFilter`,
+        languageUpdateDto.languageFilter.isActive.toString(),
+      ),
+    ]);
   }
 }
