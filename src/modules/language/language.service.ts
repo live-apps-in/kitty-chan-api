@@ -31,7 +31,7 @@ export class LanguageService {
     //Update Feature Flag Cache
     await Promise.all([
       this.redisClient.set(
-        `guild-${guildId}:feature:strongLanguage`,
+        `guild-${guildId}:feature:strongLanguageEn`,
         languageUpdateDto.strongLanguage.isActive.toString(),
       ),
 
