@@ -7,7 +7,7 @@ import { ROLES } from 'src/common/enum/roles.enum';
 import { GuildRoles } from 'src/modules/auth/decorators/guild_roles.decorator';
 import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
 import { GuildAccess } from 'src/modules/auth/guards/guild_access.guard';
-import { LanguageFilterService } from 'src/modules/language/language_filter.service';
+import { LanguageFilterService } from 'src/modules/language/language_filter/language_filter.service';
 import { DataLibsDto } from 'src/modules/language/dto/data_libs.dto';
 
 @Controller('custom_language')
