@@ -1,13 +1,13 @@
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { FeatureDefault } from 'src/common/dto/FeatureDefault.dto';
 import { LanguageFilter } from 'src/modules/language/dto/language_filter.dto';
+import { StrongLanguage } from 'src/modules/language/dto/strong_language.dto';
 
 export class LanguageDto {
   @IsNotEmpty()
-  @Type(() => FeatureDefault)
+  @Type(() => StrongLanguage)
   @ValidateNested()
-  public strongLanguage: FeatureDefault;
+  public strongLanguage: StrongLanguage;
 
   @IsNotEmpty()
   @Type(() => LanguageFilter)
