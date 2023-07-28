@@ -61,16 +61,16 @@ export class LanguageService {
       );
 
       if (e.isActive) {
-        const dataLib = await this.languageLibsModel.findOne({
-          _id: e.dataLibId,
+        const languageLib = await this.languageLibsModel.findOne({
+          _id: e.languageLibId,
           guildId,
         });
 
         //Cache Data Libs
-        if (dataLib) {
+        if (languageLib) {
           this.redisClient.set(
-            `guild-${guildId}:dataLib-${e.dataLibId}`,
-            JSON.stringify(dataLib.data),
+            `guild-${guildId}:languageLib-${e.languageLibId}`,
+            JSON.stringify(languageLib.data),
             'EX',
             300,
           );

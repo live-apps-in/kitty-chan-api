@@ -25,11 +25,11 @@ export class LanguageFilterService {
   ) {
     languageFilterDto.guildId = guildId;
 
-    const getDataLib = await this.languageLibsModel.findOne({
+    const getLanguageLib = await this.languageLibsModel.findOne({
       guildId,
       name: languageFilterDto.name,
     });
-    if (getDataLib) {
+    if (getLanguageLib) {
       throw new ConflictException('Custom Filter already exists');
     }
 

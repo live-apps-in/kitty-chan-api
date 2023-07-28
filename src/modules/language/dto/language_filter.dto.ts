@@ -33,7 +33,7 @@ class LanguageFilterConfig {
 
   @IsNotEmpty()
   @IsString()
-  public dataLibId: string;
+  public languageLibId: string;
 
   @IsNotEmpty()
   @IsObject()
