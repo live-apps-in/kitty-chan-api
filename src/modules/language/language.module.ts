@@ -15,7 +15,7 @@ import { LanguageFilterController } from 'src/modules/language/language_filter/l
 import { LanguageFilterService } from 'src/modules/language/language_filter/language_filter.service';
 import { LanguageController } from 'src/modules/language/language.controller';
 import { LanguageService } from 'src/modules/language/language.service';
-import { DataLibsSchema } from 'src/modules/language/models/data_libs.model';
+import { LanguageLibsSchema } from 'src/modules/language/models/language_libs.model';
 import { UserSchema } from 'src/modules/users/model/user.model';
 import { RedisProvider } from 'src/providers/redis.provider';
 
@@ -27,7 +27,7 @@ import { RedisProvider } from 'src/providers/redis.provider';
       { name: User.name, schema: UserSchema },
       { name: Roles.name, schema: RolesSchema },
       { name: Features.name, schema: FeaturesSchema },
-      { name: 'data_libs', schema: DataLibsSchema },
+      { name: 'language_libs', schema: LanguageLibsSchema },
     ]),
     GuildModule,
   ],

@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
-export class DataLibs {
+export class LanguageLibs {
   @Prop()
   name: string;
 
@@ -13,6 +13,9 @@ export class DataLibs {
 
   @Prop()
   guildId: string;
+
+  @Prop({ default: 'default' })
+  type: string;
 }
 
-export const DataLibsSchema = SchemaFactory.createForClass(DataLibs);
+export const LanguageLibsSchema = SchemaFactory.createForClass(LanguageLibs);

@@ -6,14 +6,15 @@ import { FeaturesEnum } from 'src/common/enum/features.enum';
 import { PROVIDER_TYPES } from 'src/core/provider.types';
 import { FeaturesRepo } from 'src/modules/features/repository/features.repo';
 import { LanguageDto } from 'src/modules/language/dto/language.dto';
-import { DataLibs } from 'src/modules/language/models/data_libs.model';
+import { LanguageLibs } from 'src/modules/language/models/language_libs.model';
 
 @Injectable()
 export class LanguageService {
   constructor(
     @Inject(FeaturesRepo) private readonly featuresRepo: FeaturesRepo,
     @Inject(PROVIDER_TYPES.RedisClient) private readonly redisClient: Redis,
-    @InjectModel('data_libs') private readonly dataLibsModel: Model<DataLibs>,
+    @InjectModel('language_libs')
+    private readonly languageLibsModel: Model<LanguageLibs>,
   ) {}
 
   async viewLanguage(guildId: string): Promise<LanguageDto> {
@@ -60,7 +61,7 @@ export class LanguageService {
       );
 
       if (e.isActive) {
-        const dataLib = await this.dataLibsModel.findOne({
+        const dataLib = await this.languageLibsModel.findOne({
           _id: e.dataLibId,
           guildId,
         });

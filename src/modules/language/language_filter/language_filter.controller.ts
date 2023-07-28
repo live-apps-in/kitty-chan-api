@@ -8,7 +8,7 @@ import { GuildRoles } from 'src/modules/auth/decorators/guild_roles.decorator';
 import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
 import { GuildAccess } from 'src/modules/auth/guards/guild_access.guard';
 import { LanguageFilterService } from 'src/modules/language/language_filter/language_filter.service';
-import { DataLibsDto } from 'src/modules/language/dto/data_libs.dto';
+import { LanguageLibsDto } from 'src/modules/language/dto/language_libs.dto';
 
 @Controller('custom_language')
 export class LanguageFilterController {
@@ -31,7 +31,7 @@ export class LanguageFilterController {
   @Post('/filters')
   async addCustomFilter(
     @ExtractContext() { guildId }: UserRequestContext,
-    @Body() languageFilterDto: DataLibsDto,
+    @Body() languageFilterDto: LanguageLibsDto,
   ) {
     return this.langFilterService.createCustomFilter(
       guildId,

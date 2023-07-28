@@ -1,27 +1,31 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DataLibsDto } from 'src/modules/language/dto/data_libs.dto';
-import { DataLibs } from 'src/modules/language/models/data_libs.model';
+import { LanguageLibsDto } from 'src/modules/language/dto/language_libs.dto';
+import { LanguageLibs } from 'src/modules/language/models/language_libs.model';
 
 @Injectable()
 export class LanguageFilterService {
   constructor(
-    @InjectModel('data_libs') private readonly dataLibsModel: Model<DataLibs>,
+    @InjectModel('language_libs')
+    private readonly languageLibsModel: Model<LanguageLibs>,
   ) {}
 
   async viewCustomFilter(guildId: string) {
-    return this.dataLibsModel.find({ guildId }, { system: 0 });
+    return this.languageLibsModel.find({ guildId }, { system: 0 });
   }
 
   async viewCustomFilterByName(guildId: string, name: string) {
-    return this.dataLibsModel.findOne({ guildId, name });
+    return this.languageLibsModel.findOne({ guildId, name });
   }
 
-  async createCustomFilter(guildId: string, languageFilterDto: DataLibsDto) {
+  async createCustomFilter(
+    guildId: string,
+    languageFilterDto: LanguageLibsDto,
+  ) {
     languageFilterDto.guildId = guildId;
 
-    const getDataLib = await this.dataLibsModel.findOne({
+    const getDataLib = await this.languageLibsModel.findOne({
       guildId,
       name: languageFilterDto.name,
     });
@@ -29,6 +33,6 @@ export class LanguageFilterService {
       throw new ConflictException('Custom Filter already exists');
     }
 
-    return new this.dataLibsModel(languageFilterDto).save();
+    return new this.languageLibsModel(languageFilterDto).save();
   }
 }
