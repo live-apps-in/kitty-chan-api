@@ -1,7 +1,7 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { GuildAdminDto } from 'src/modules/guilds/dto/GuildAdmin.dto';
+import { GuildStaffDto } from 'src/modules/guilds/dto/GuildStaff.dto';
 import { GuildRoleDto } from 'src/modules/guilds/dto/GuildRole.dto';
 import { Guild } from 'src/modules/guilds/model/guild.model';
 import { Roles } from 'src/modules/guilds/model/roles.model';
@@ -13,47 +13,98 @@ export class GuildPermsService {
     @InjectModel(Roles.name) private readonly roleModel: Model<Roles>,
   ) {}
 
-  /**Guild Admin */
-  async addGuildAdmin(guildId: string, guildAdminDto: GuildAdminDto) {
-    const guildAdmin = await this.guildModel.findOne({
+  /**Guild Staff */
+  async addGuildStaff(guildId: string, guildStaffDto: GuildStaffDto) {
+    const guildStaff = await this.guildModel.findOne({
       guildId,
-      'admins.userId': guildAdminDto.userId,
+      'staffs.userId': guildStaffDto.userId,
     });
 
-    if (guildAdmin) {
-      throw new ConflictException('Admin already exists');
+    if (guildStaff) {
+      throw new ConflictException('Staff already exists');
     }
 
     await this.guildModel.updateOne(
       { guildId },
       {
         $push: {
-          admins: { ...guildAdminDto },
+          staffs: { ...guildStaffDto },
         },
       },
     );
   }
 
-  async updateGuildAdmin(
+  /**Guild Staff */
+  async viewGuildStaff(guildId: string) {
+    return this.guildModel.aggregate([
+      {
+        $match: {
+          guildId,
+        },
+      },
+      {
+        $unwind: { path: '$staffs' },
+      },
+      {
+        $addFields: { staffId: { $toObjectId: '$staffs.userId' } },
+      },
+      {
+        $lookup: {
+          localField: 'staffId',
+          foreignField: '_id',
+          from: 'users',
+          as: 'staff',
+        },
+      },
+      {
+        $unwind: '$staff',
+      },
+      {
+        $project: {
+          staffs: 1,
+          staff: 1,
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ['$staff', '$staffs'],
+          },
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          roleId: 1,
+          userId: 1,
+          'discord.avatar': 1,
+          'discord.username': 1,
+          isActive: 1,
+        },
+      },
+    ]);
+  }
+
+  async updateGuildStaff(
     guildId: string,
     userId: string,
-    guildAdminDto: GuildAdminDto,
+    guildStaffDto: GuildStaffDto,
   ) {
-    guildAdminDto.userId = userId;
+    guildStaffDto.userId = userId;
 
     await this.guildModel.updateOne(
-      { guildId, 'admins.userId': userId },
+      { guildId, 'staffs.userId': userId },
       {
-        $set: { 'admins.$': guildAdminDto },
+        $set: { 'staffs.$': guildStaffDto },
       },
     );
   }
 
-  async deleteGuildAdmin(guildId: string, userId: string) {
+  async deleteGuildStaff(guildId: string, userId: string) {
     await this.guildModel.updateOne(
-      { guildId, 'admins.userId': userId },
+      { guildId, 'staffs.userId': userId },
       {
-        $pull: { admins: { userId } },
+        $pull: { staffs: { userId } },
       },
     );
   }

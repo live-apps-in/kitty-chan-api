@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Guild } from 'discord.js';
 import { Model, Types } from 'mongoose';
 import { ROLES } from 'src/common/enum/roles.enum';
+import { Guild } from 'src/modules/guilds/model/guild.model';
 import { User } from 'src/modules/users/model/user.model';
 
 @Injectable()
@@ -11,6 +11,10 @@ export class GuildRepo {
     @InjectModel(Guild.name) private readonly guildModel: Model<Guild>,
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
+
+  async findById(guildId: string) {
+    return this.guildModel.findOne({ guildId });
+  }
 
   async getMutualUserGuilds(guildIds: string[]) {
     return this.guildModel.find({

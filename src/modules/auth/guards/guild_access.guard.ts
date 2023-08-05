@@ -53,7 +53,7 @@ export class GuildAccess implements CanActivate {
       permissions = Object.values(GUILD_PERMS);
     } else {
       const roleId =
-        guild.admins.find((admin) => admin.userId === userData.userId)
+        guild.staffs.find((admin) => admin.userId === userData.userId)
           ?.roleId || null;
 
       const roles = await this.rolesModel.findOne({ _id: roleId });
