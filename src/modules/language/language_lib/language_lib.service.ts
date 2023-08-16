@@ -5,30 +5,27 @@ import { LanguageLibsDto } from 'src/modules/language/dto/language_libs.dto';
 import { LanguageLibs } from 'src/modules/language/models/language_libs.model';
 
 @Injectable()
-export class LanguageFilterService {
+export class LanguageLibService {
   constructor(
     @InjectModel('language_libs')
     private readonly languageLibsModel: Model<LanguageLibs>,
   ) {}
 
-  async viewCustomFilter(guildId: string) {
+  async viewLanguageLib(guildId: string) {
     return this.languageLibsModel.find({ guildId }, { system: 0 });
   }
 
-  async viewCustomFilterByName(guildId: string, name: string) {
+  async viewLanguageLibByName(guildId: string, name: string) {
     return this.languageLibsModel.findOne({ guildId, name });
   }
 
-  async createCustomFilter(
-    guildId: string,
-    languageFilterDto: LanguageLibsDto,
-  ) {
+  async createLanguageLib(guildId: string, languageFilterDto: LanguageLibsDto) {
     languageFilterDto.guildId = guildId;
 
-    const getLanguageLib = await this.languageLibsModel.findOne({
+    const getLanguageLib = await this.viewLanguageLibByName(
       guildId,
-      name: languageFilterDto.name,
-    });
+      languageFilterDto.name,
+    );
     if (getLanguageLib) {
       throw new ConflictException('Custom Filter already exists');
     }
