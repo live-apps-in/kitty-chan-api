@@ -15,6 +15,7 @@ import { GuildRoles } from 'src/modules/auth/decorators/guild_roles.decorator';
 import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
 import { GuildAccess } from 'src/modules/auth/guards/guild_access.guard';
 import { LanguageDto } from 'src/modules/language/dto/language.dto';
+import { StrongLanguage } from 'src/modules/language/dto/strong_language.dto';
 import { LanguageService } from 'src/modules/language/language.service';
 
 @Controller('language')
@@ -42,4 +43,17 @@ export class LanguageController {
     await this.languageService.updateLanguage(guildId, languageUpdateDto);
     return languageUpdateDto;
   }
+  
+  /**Update Strong Language Config */
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Patch('strongLanguage')
+  async updateStrongLanguage(
+    @ExtractContext() { guildId }: UserRequestContext,
+    @Body() strongLangUpdateDto: StrongLanguage,
+  ) {
+    await this.languageService.updateStrongLanguage(guildId, strongLangUpdateDto);
+    return strongLangUpdateDto;
+  }
+
 }

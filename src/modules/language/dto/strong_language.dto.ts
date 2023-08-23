@@ -5,9 +5,10 @@ import {
   ValidateIf,
   IsObject,
   ValidateNested,
-  ArrayNotEmpty,
   IsArray,
+  IsMongoId,
 } from 'class-validator';
+import { Types } from 'mongoose';
 import { FeatureDefault } from 'src/common/dto/FeatureDefault.dto';
 import { LanguageFilterAction } from 'src/modules/language/enum/lang_filter.enum';
 import { StrongLanguageCodes } from 'src/modules/language/enum/strong_language.enum';
@@ -26,11 +27,21 @@ class StrongLanguageTriggerAction {
   public replyMessage: string;
 }
 
+class StrongLanguageConfig {
+  @IsNotEmpty()
+  @IsEnum(StrongLanguageCodes)
+  language: StrongLanguageCodes;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  whitelistLib: Types.ObjectId
+}
+
 export class StrongLanguage extends FeatureDefault {
   @IsArray()
-  @ArrayNotEmpty()
-  @IsEnum(StrongLanguageCodes, { each: true })
-  languages: StrongLanguageCodes[];
+  @Type(() => StrongLanguageConfig)
+  @ValidateNested()
+  languageConfig: StrongLanguageConfig[];
 
   @IsNotEmpty()
   @IsObject()

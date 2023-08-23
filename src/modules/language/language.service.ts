@@ -6,6 +6,7 @@ import { FeaturesEnum } from 'src/common/enum/features.enum';
 import { PROVIDER_TYPES } from 'src/core/provider.types';
 import { FeaturesRepo } from 'src/modules/features/repository/features.repo';
 import { LanguageDto } from 'src/modules/language/dto/language.dto';
+import { StrongLanguage } from 'src/modules/language/dto/strong_language.dto';
 import { LanguageLibs } from 'src/modules/language/models/language_libs.model';
 
 @Injectable()
@@ -77,5 +78,27 @@ export class LanguageService {
         }
       }
     });
+  }
+
+  async updateStrongLanguage(guildId: string, strongLanguageDto: StrongLanguage) {
+    let languageFeature = await this.featuresRepo.findSingleFeature(guildId, FeaturesEnum.LANGUAGE);
+    languageFeature.strongLanguage = strongLanguageDto
+
+    await this.featuresRepo.updateSingleFeature(guildId, FeaturesEnum.LANGUAGE, languageFeature)
+
+    //Update Feature Flag Cache
+    await Promise.all([
+      this.redisClient.set(
+        `guild-${guildId}:feature:strongLanguage`,
+        strongLanguageDto.isActive.toString(),
+      ),
+
+      this.redisClient.set(
+        `guild-${guildId}:feature:strongLanguageConfig`,
+        JSON.stringify(strongLanguageDto),
+      ),
+
+    ]);
+
   }
 }

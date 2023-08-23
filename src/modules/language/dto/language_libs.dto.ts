@@ -1,9 +1,11 @@
 import {
   ArrayNotEmpty,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
+import { LangLibsEnum } from 'src/modules/language/enum/lang_lib_types.enum';
 
 export class LanguageLibsDto {
   @IsNotEmpty()
@@ -16,8 +18,8 @@ export class LanguageLibsDto {
   public data: string[];
 
   @IsOptional()
-  @IsString()
-  public type: string;
+  @IsEnum(LangLibsEnum)
+  public type: LangLibsEnum;
 
   public guildId: string;
 }
