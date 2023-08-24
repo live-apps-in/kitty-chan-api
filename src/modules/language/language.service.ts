@@ -80,11 +80,21 @@ export class LanguageService {
     });
   }
 
-  async updateStrongLanguage(guildId: string, strongLanguageDto: StrongLanguage) {
-    let languageFeature = await this.featuresRepo.findSingleFeature(guildId, FeaturesEnum.LANGUAGE);
-    languageFeature.strongLanguage = strongLanguageDto
+  async updateStrongLanguage(
+    guildId: string,
+    strongLanguageDto: StrongLanguage,
+  ) {
+    let languageFeature = await this.featuresRepo.findSingleFeature(
+      guildId,
+      FeaturesEnum.LANGUAGE,
+    );
+    languageFeature.strongLanguage = strongLanguageDto;
 
-    await this.featuresRepo.updateSingleFeature(guildId, FeaturesEnum.LANGUAGE, languageFeature)
+    await this.featuresRepo.updateSingleFeature(
+      guildId,
+      FeaturesEnum.LANGUAGE,
+      languageFeature,
+    );
 
     //Update Feature Flag Cache
     await Promise.all([
@@ -97,8 +107,31 @@ export class LanguageService {
         `guild-${guildId}:feature:strongLanguageConfig`,
         JSON.stringify(strongLanguageDto),
       ),
-
     ]);
 
+    //Cache Strong Language config
+    this.redisClient.set(
+      `guild-${guildId}:feature:strongLanguageConfig`,
+      JSON.stringify(strongLanguageDto),
+      'EX',
+      300,
+    );
+
+    strongLanguageDto.languageConfig.map(async (e) => {
+      const languageLib = await this.languageLibsModel.findOne({
+        _id: e.whitelistLib,
+        guildId,
+      });
+
+      //Cache Data Libs
+      if (languageLib) {
+        this.redisClient.set(
+          `guild-${guildId}:languageLib-${e.whitelistLib}`,
+          JSON.stringify(languageLib.data),
+          'EX',
+          300,
+        );
+      }
+    });
   }
 }
