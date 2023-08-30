@@ -7,6 +7,7 @@ import { GreetModule } from 'src/modules/greet/greet.module';
 import { TemplateModule } from 'src/modules/templates/templates.module';
 import { LoggerModule } from 'src/modules/logger/logger.module';
 import { LanguageModule } from 'src/modules/language/language.module';
+import { PortalModule } from 'src/modules/portal/portal.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { LanguageModule } from 'src/modules/language/language.module';
     LoggerModule,
     LanguageModule,
     TemplateModule,
+    PortalModule,
   ],
   controllers: [AppController],
   providers: [],

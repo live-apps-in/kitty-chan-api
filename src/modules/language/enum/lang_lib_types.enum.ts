@@ -1,4 +1,4 @@
-export enum LangLibsEnum{
-    DEFAULT = 'default',
-    WHITELIST = 'whitelist'
+export enum LangLibsEnum {
+  DEFAULT = 'default',
+  WHITELIST = 'whitelist',
 }

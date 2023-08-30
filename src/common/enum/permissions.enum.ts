@@ -52,6 +52,12 @@ export enum LOGGER_PERMS {
   memberAvatarUpdateDelete = 'logger:memberAvatarUpdate:delete',
 }
 
+/**Portal */
+export enum PORTAL_PERMS {
+  read = 'portal:read',
+  write = 'portal:write',
+}
+
 /**Discord Template */
 export enum TEMPLATE_PERMS {
   read = 'template:read',
@@ -64,4 +70,5 @@ export const GUILD_PERMS = {
   ...GREET_PERMS,
   ...LOGGER_PERMS,
   ...TEMPLATE_PERMS,
+  ...PORTAL_PERMS,
 };

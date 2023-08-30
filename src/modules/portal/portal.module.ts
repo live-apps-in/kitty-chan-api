@@ -1,3 +1,4 @@
+import { Roles } from '@live-apps/discord/lib/modules/roles/roles';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Auth, AuthSchema } from 'src/modules/auth/model/auth.model';
@@ -6,10 +7,11 @@ import {
   FeaturesSchema,
 } from 'src/modules/features/model/features.model';
 import { FeaturesRepo } from 'src/modules/features/repository/features.repo';
-import { GreetController } from 'src/modules/greet/greet.controller';
-import { GreetService } from 'src/modules/greet/greet.service';
 import { GuildModule } from 'src/modules/guilds/guild.module';
-import { Roles, RolesSchema } from 'src/modules/guilds/model/roles.model';
+import { RolesSchema } from 'src/modules/guilds/model/roles.model';
+import { Portal, PortalSchema } from 'src/modules/portal/model/portal.model';
+import { PortalController } from 'src/modules/portal/portal.controller';
+import { PortalService } from 'src/modules/portal/service/portal.service';
 
 @Module({
   imports: [
@@ -17,10 +19,11 @@ import { Roles, RolesSchema } from 'src/modules/guilds/model/roles.model';
       { name: Auth.name, schema: AuthSchema },
       { name: Roles.name, schema: RolesSchema },
       { name: Features.name, schema: FeaturesSchema },
+      { name: Portal.name, schema: PortalSchema },
     ]),
     GuildModule,
   ],
-  providers: [GreetService, FeaturesRepo],
-  controllers: [GreetController],
+  providers: [PortalService, FeaturesRepo],
+  controllers: [PortalController],
 })
-export class GreetModule {}
+export class PortalModule {}

@@ -34,7 +34,7 @@ class StrongLanguageConfig {
 
   @IsNotEmpty()
   @IsMongoId()
-  whitelistLib: Types.ObjectId
+  whitelistLib: Types.ObjectId;
 }
 
 export class StrongLanguage extends FeatureDefault {

@@ -6,7 +6,7 @@ export class AppController {
   getHello(): any {
     return {
       app: 'kitty chan API',
-      prodPort: 5000,
+      port: 5000,
     };
   }
 }

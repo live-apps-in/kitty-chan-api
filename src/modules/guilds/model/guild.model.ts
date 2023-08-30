@@ -1,8 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
 import { GuildStaffDto } from 'src/modules/guilds/dto/GuildStaff.dto';
-
-export type GuildDocument = HydratedDocument<Guild>;
 
 @Schema()
 export class Guild {

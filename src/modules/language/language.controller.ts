@@ -43,7 +43,7 @@ export class LanguageController {
     await this.languageService.updateLanguage(guildId, languageUpdateDto);
     return languageUpdateDto;
   }
-  
+
   /**Update Strong Language Config */
   @UseGuards(AuthGuard, GuildAccess)
   @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
@@ -52,8 +52,10 @@ export class LanguageController {
     @ExtractContext() { guildId }: UserRequestContext,
     @Body() strongLangUpdateDto: StrongLanguage,
   ) {
-    await this.languageService.updateStrongLanguage(guildId, strongLangUpdateDto);
+    await this.languageService.updateStrongLanguage(
+      guildId,
+      strongLangUpdateDto,
+    );
     return strongLangUpdateDto;
   }
-
 }

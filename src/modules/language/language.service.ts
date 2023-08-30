@@ -84,7 +84,7 @@ export class LanguageService {
     guildId: string,
     strongLanguageDto: StrongLanguage,
   ) {
-    let languageFeature = await this.featuresRepo.findSingleFeature(
+    const languageFeature = await this.featuresRepo.findSingleFeature(
       guildId,
       FeaturesEnum.LANGUAGE,
     );
