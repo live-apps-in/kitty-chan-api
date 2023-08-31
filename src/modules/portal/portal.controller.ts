@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Patch, UseGuards } from '@nestjs/common';
 import {
   ExtractContext,
   UserRequestContext,
@@ -22,4 +22,10 @@ export class PortalController {
   async getPortalConfig(@ExtractContext() { guildId }: UserRequestContext) {
     return this.portalService.getPortalConfig(guildId);
   }
+
+  /**Update Portal Config */
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Patch()
+  async updatePortalConfig(@ExtractContext() { guildId }: UserRequestContext) {}
 }
