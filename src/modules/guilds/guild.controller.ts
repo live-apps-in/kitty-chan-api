@@ -21,13 +21,6 @@ export class GuildController {
 
   @UseGuards(AuthGuard, GuildAccess)
   @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN, ROLES.GUILD_MEMBER)
-  @Get()
-  async getAppGuild(@Request() req: Req) {
-    return this.guildService.getGuildById(req.userData.guildId);
-  }
-
-  @UseGuards(AuthGuard, GuildAccess)
-  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN, ROLES.GUILD_MEMBER)
   @Get('/:guildId')
   async getDiscordGuild(@Param('guildId') guildId: string) {
     return this.guildService.getDiscordGuildById(guildId);
