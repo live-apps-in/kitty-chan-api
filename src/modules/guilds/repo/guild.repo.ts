@@ -61,7 +61,7 @@ export class GuildRepo {
               ROLES.GUILD_OWNER,
               {
                 $cond: [
-                  { $in: ['$discordId', '$admins'] },
+                  { $in: ['$discordId', '$staffs'] },
                   ROLES.GUILD_ADMIN,
                   ROLES.GUILD_MEMBER,
                 ],
@@ -89,7 +89,7 @@ export class GuildRepo {
       {
         $match: {
           guildId,
-          $or: [{ ownerId: discordId }, { admins: discordId }],
+          $or: [{ ownerId: discordId }, { staffs: discordId }],
         },
       },
       {
@@ -100,7 +100,7 @@ export class GuildRepo {
               ROLES.GUILD_OWNER,
               {
                 $cond: [
-                  { $in: [discordId, '$admins'] },
+                  { $in: [discordId, '$staffs'] },
                   ROLES.GUILD_ADMIN,
                   ROLES.GUILD_MEMBER,
                 ],
