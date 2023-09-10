@@ -4,6 +4,7 @@ import {
   Get,
   Inject,
   Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -14,7 +15,7 @@ import { ROLES } from 'src/common/enum/roles.enum';
 import { GuildRoles } from 'src/modules/auth/decorators/guild_roles.decorator';
 import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
 import { GuildAccess } from 'src/modules/auth/guards/guild_access.guard';
-import { PortalDto } from 'src/modules/portal/dto/portal.dto';
+import { PortalDto, PortalRoomDto } from 'src/modules/portal/dto/portal.dto';
 import { PortalService } from 'src/modules/portal/service/portal.service';
 
 @Controller('portal')
@@ -40,5 +41,35 @@ export class PortalController {
     @Body() portalDto: PortalDto,
   ) {
     return this.portalService.updatePortalConfig(guildId, portalDto);
+  }
+
+  /**Create Portal Room */
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Post('/room')
+  async createPortalRoom(
+    @ExtractContext() { guildId, userId }: UserRequestContext,
+    @Body() portalRoomDto: PortalRoomDto,
+  ) {
+    return this.portalService.createPortalRoom(guildId, userId, portalRoomDto);
+  }
+
+  /**View Portal Room */
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Get('/room')
+  async getPortalRoom(@ExtractContext() { guildId }: UserRequestContext) {
+    return this.portalService.getPortalRoom(guildId);
+  }
+
+  /**Update Portal Room */
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Patch('/room')
+  async updatePortalRoom(
+    @ExtractContext() { guildId }: UserRequestContext,
+    @Body() portalRoomDto: PortalRoomDto,
+  ) {
+    return this.portalService.updatePortalRoom(guildId, portalRoomDto);
   }
 }
