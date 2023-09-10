@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
+import Redis from 'ioredis';
 import { FeaturesEnum } from 'src/common/enum/features.enum';
+import { PROVIDER_TYPES } from 'src/core/provider.types';
 import { FeaturesRepo } from 'src/modules/features/repository/features.repo';
 import { PortalDto } from 'src/modules/portal/dto/portal.dto';
 
@@ -7,6 +9,7 @@ import { PortalDto } from 'src/modules/portal/dto/portal.dto';
 export class PortalService {
   constructor(
     @Inject(FeaturesRepo) private readonly featureRepo: FeaturesRepo,
+    @Inject(PROVIDER_TYPES.RedisClient) private readonly redisClient: Redis,
   ) {}
 
   /**Get Portal Config */
@@ -21,5 +24,18 @@ export class PortalService {
       FeaturesEnum.PORTAL,
       portalDto,
     );
+
+    const portalConfig = await this.featureRepo.findSingleFeature(
+      guildId,
+      FeaturesEnum.PORTAL,
+    );
+
+    //Update Redis cache
+    await this.redisClient.set(
+      `guild-${guildId}:feature:portal`,
+      JSON.stringify(portalConfig),
+    );
+
+    return portalDto;
   }
 }
