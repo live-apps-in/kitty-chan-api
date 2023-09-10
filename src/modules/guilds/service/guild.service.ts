@@ -5,6 +5,7 @@ import { Model, Types } from 'mongoose';
 import { PROVIDER_TYPES } from 'src/core/provider.types';
 import { Guild } from 'src/modules/guilds/model/guild.model';
 import { GuildRepo } from 'src/modules/guilds/repo/guild.repo';
+import { User } from 'src/modules/users/model/user.model';
 
 @Injectable()
 export class GuildService {
@@ -13,6 +14,7 @@ export class GuildService {
     private readonly discordClient: Client,
     @Inject(GuildRepo) private readonly guildRepo: GuildRepo,
     @InjectModel(Guild.name) private readonly guildModel: Model<Guild>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
   async getGuildById(guildId: string) {
@@ -32,6 +34,20 @@ export class GuildService {
   /**View all User guilds with user role */
   async getUserGuilds(userId: string) {
     return this.guildRepo.getAllUserGuild(new Types.ObjectId(userId));
+  }
+
+  /**Search Guild User */
+  async wildcardGuildUserSearchByName(guildId: string, name: string) {
+    return this.userModel.find(
+      {
+        guilds: guildId,
+        $or: [
+          { 'discord.username': { $regex: name, $options: 'i' } },
+          { 'discord.global_name': { $regex: name, $options: 'i' } },
+        ],
+      },
+      { name: 1 },
+    );
   }
 
   /**
