@@ -10,10 +10,7 @@ import { FeaturesRepo } from 'src/modules/features/repository/features.repo';
 import { GuildModule } from 'src/modules/guilds/guild.module';
 import { RolesSchema } from 'src/modules/guilds/model/roles.model';
 import { Portal, PortalSchema } from 'src/modules/portal/model/portal.model';
-import {
-  PortalRoom,
-  PortalRoomSchema,
-} from 'src/modules/portal/model/portal_room.model';
+import { PortalRoomSchema } from 'src/modules/portal/model/portal_room.model';
 import { PortalController } from 'src/modules/portal/portal.controller';
 import { PortalService } from 'src/modules/portal/service/portal.service';
 import { RedisProvider } from 'src/providers/redis.provider';
@@ -25,7 +22,7 @@ import { RedisProvider } from 'src/providers/redis.provider';
       { name: Roles.name, schema: RolesSchema },
       { name: Features.name, schema: FeaturesSchema },
       { name: Portal.name, schema: PortalSchema },
-      { name: PortalRoom.name, schema: PortalRoomSchema },
+      { name: 'portal_rooms', schema: PortalRoomSchema },
     ]),
     GuildModule,
   ],

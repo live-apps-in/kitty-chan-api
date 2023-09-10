@@ -15,6 +15,9 @@ export class PortalRoom {
   tags: string[];
 
   @Prop()
+  guilds: any[];
+
+  @Prop()
   createdBy: string;
 }
 

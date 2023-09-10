@@ -15,7 +15,7 @@ export class PortalService {
     @Inject(FeaturesRepo) private readonly featureRepo: FeaturesRepo,
     @Inject(PROVIDER_TYPES.RedisClient) private readonly redisClient: Redis,
     @Inject(GuildRepo) private readonly guildRepo: GuildRepo,
-    @InjectModel(PortalRoom.name)
+    @InjectModel('portal_rooms')
     private readonly portalRoom: Model<PortalRoom>,
   ) {}
 
@@ -63,6 +63,12 @@ export class PortalService {
       ...portalRoomDto,
       guildId,
       guildName: name,
+      guilds: [
+        {
+          name,
+          guildId,
+        },
+      ],
       createdBy: userId,
     };
 
