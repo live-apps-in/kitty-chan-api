@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsObject, IsString } from 'class-validator';
+import { ArrayNotEmpty, IsNotEmpty, IsString } from 'class-validator';
 
 export class GuildRoleDto {
   @IsNotEmpty()
@@ -6,8 +6,9 @@ export class GuildRoleDto {
   name: string;
 
   @IsNotEmpty()
-  @IsObject()
-  permissions: any;
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  permissions: string[];
 
   @IsNotEmpty()
   @IsString()
