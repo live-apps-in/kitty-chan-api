@@ -12,6 +12,7 @@ import { RolesSchema } from 'src/modules/guilds/model/roles.model';
 import { Portal, PortalSchema } from 'src/modules/portal/model/portal.model';
 import { PortalController } from 'src/modules/portal/portal.controller';
 import { PortalService } from 'src/modules/portal/service/portal.service';
+import { RedisProvider } from 'src/providers/redis.provider';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { PortalService } from 'src/modules/portal/service/portal.service';
     ]),
     GuildModule,
   ],
-  providers: [PortalService, FeaturesRepo],
+  providers: [PortalService, FeaturesRepo, RedisProvider],
   controllers: [PortalController],
 })
 export class PortalModule {}
