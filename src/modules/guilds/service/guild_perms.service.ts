@@ -113,7 +113,10 @@ export class GuildPermsService {
   async addGuildRole(guildId: string, guildRoleDto: GuildRoleDto) {
     const guildRole = await this.roleModel.findOne({
       guildId,
-      permissions: guildRoleDto.permissions,
+      $or: [
+        { name: guildRoleDto.name },
+        { permissions: { $all: guildRoleDto.permissions } },
+      ],
     });
 
     if (guildRole) {
@@ -133,6 +136,19 @@ export class GuildPermsService {
     roleId: string,
     guildRoleDto: GuildRoleDto,
   ) {
+    const guildRole = await this.roleModel.findOne({
+      _id: { $ne: roleId },
+      guildId,
+      $or: [
+        { name: guildRoleDto.name },
+        { permissions: { $all: guildRoleDto.permissions } },
+      ],
+    });
+
+    if (guildRole) {
+      throw new ConflictException('Role already exists');
+    }
+
     await this.roleModel.updateOne(
       { _id: roleId, guildId },
       {
