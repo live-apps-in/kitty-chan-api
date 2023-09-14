@@ -18,11 +18,8 @@ export class Guild {
   @Prop({ type: Array<GuildStaffDto>, default: [] })
   staffs: GuildStaffDto[];
 
-  @Prop({ type: Object })
-  features: any;
-
-  @Prop({ type: Object })
-  portal: any;
+  @Prop()
+  tags: string[];
 
   @Prop({ type: Number })
   messageCount: number;

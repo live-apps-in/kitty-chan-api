@@ -16,6 +16,10 @@ export class GuildRepo {
     return this.guildModel.findOne({ guildId });
   }
 
+  async updateById(guildId: string, payload: any) {
+    await this.guildModel.updateOne({ guildId }, { $set: payload });
+  }
+
   async getMutualUserGuilds(guildIds: string[]) {
     return this.guildModel.find({
       guildId: { $in: guildIds },

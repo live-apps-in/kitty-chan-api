@@ -3,6 +3,7 @@ import { Injectable, Inject, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { PROVIDER_TYPES } from 'src/core/provider.types';
+import { GuildUpdateDto } from 'src/modules/guilds/dto/Guild.dto';
 import { Guild } from 'src/modules/guilds/model/guild.model';
 import { GuildRepo } from 'src/modules/guilds/repo/guild.repo';
 import { User } from 'src/modules/users/model/user.model';
@@ -19,6 +20,10 @@ export class GuildService {
 
   async getGuildById(guildId: string) {
     return this.guildRepo.findById(guildId);
+  }
+
+  async updateGuildById(guildId: string, guildUpdateDto: GuildUpdateDto) {
+    await this.guildRepo.updateById(guildId, guildUpdateDto);
   }
 
   async getDiscordGuildById(guildId: string) {
