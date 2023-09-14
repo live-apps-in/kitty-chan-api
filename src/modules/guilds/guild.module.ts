@@ -8,6 +8,7 @@ import { Roles, RolesSchema } from 'src/modules/guilds/model/roles.model';
 import { GuildRepo } from 'src/modules/guilds/repo/guild.repo';
 import { GuildService } from 'src/modules/guilds/service/guild.service';
 import { GuildPermsService } from 'src/modules/guilds/service/guild_perms.service';
+import { GuildWsGateway } from 'src/modules/guilds/websocket/guild.ws';
 import { User, UserSchema } from 'src/modules/users/model/user.model';
 import { DiscordProvider } from 'src/providers/discord.provider';
 
@@ -21,7 +22,13 @@ import { DiscordProvider } from 'src/providers/discord.provider';
     ]),
   ],
   controllers: [GuildPermsController, GuildController],
-  providers: [GuildService, GuildPermsService, GuildRepo, DiscordProvider],
+  providers: [
+    GuildService,
+    GuildPermsService,
+    GuildRepo,
+    DiscordProvider,
+    GuildWsGateway,
+  ],
   exports: [GuildRepo],
 })
 export class GuildModule {}
