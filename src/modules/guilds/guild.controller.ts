@@ -27,6 +27,17 @@ export class GuildController {
     @Inject(GuildService) private readonly guildService: GuildService,
   ) {}
 
+  /**Search Guild Users */
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN, ROLES.GUILD_MEMBER)
+  @Get('user')
+  async searchGuildUser(
+    @ExtractContext() { guildId }: UserRequestContext,
+    @Query('name') name: string,
+  ) {
+    return this.guildService.wildcardGuildUserSearchByName(guildId, name);
+  }
+
   /**Get guild by id */
   @UseGuards(AuthGuard, GuildAccess)
   @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN, ROLES.GUILD_MEMBER)
@@ -51,16 +62,5 @@ export class GuildController {
   @Get()
   async viewUserGuilds(@Request() req: Req) {
     return this.guildService.getUserGuilds(req.userData.userId);
-  }
-
-  /**Search Guild Users */
-  @UseGuards(AuthGuard, GuildAccess)
-  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN, ROLES.GUILD_MEMBER)
-  @Get('user')
-  async searchGuildUser(
-    @ExtractContext() { guildId }: UserRequestContext,
-    @Query('name') name: string,
-  ) {
-    return this.guildService.wildcardGuildUserSearchByName(guildId, name);
   }
 }

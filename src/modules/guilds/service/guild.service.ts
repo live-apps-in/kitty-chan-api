@@ -51,7 +51,7 @@ export class GuildService {
           { 'discord.global_name': { $regex: name, $options: 'i' } },
         ],
       },
-      { name: 1 },
+      { name: 1, discord: 1 },
     );
   }
 
