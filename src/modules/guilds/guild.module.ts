@@ -11,6 +11,7 @@ import { GuildPermsService } from 'src/modules/guilds/service/guild_perms.servic
 import { GuildWsGateway } from 'src/modules/guilds/websocket/guild.ws';
 import { User, UserSchema } from 'src/modules/users/model/user.model';
 import { DiscordProvider } from 'src/providers/discord.provider';
+import { RedisProvider } from 'src/providers/redis.provider';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { DiscordProvider } from 'src/providers/discord.provider';
     GuildRepo,
     DiscordProvider,
     GuildWsGateway,
+    RedisProvider,
   ],
   exports: [GuildRepo],
 })

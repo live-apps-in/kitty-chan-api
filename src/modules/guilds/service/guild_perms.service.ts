@@ -77,6 +77,7 @@ export class GuildPermsService {
           name: 1,
           roleId: 1,
           userId: 1,
+          'discord.id': 1,
           'discord.avatar': 1,
           'discord.username': 1,
           isActive: 1,
