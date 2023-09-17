@@ -1,4 +1,3 @@
-import { Inject } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -7,97 +6,45 @@ import {
   SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
-import { Redis } from 'ioredis';
 import { Socket } from 'socket.io';
-import { PROVIDER_TYPES } from 'src/core/provider.types';
 import { GuildUserActivityDto } from 'src/modules/guilds/dto/GuildWs.dto';
 
 @WebSocketGateway()
 export class GuildWsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(
-    @Inject(PROVIDER_TYPES.RedisClient)
-    private readonly redisClient: Redis,
-  ) {}
+  private rooms: any = {};
 
   /**Handle Client Connect */
-  handleConnection(client: any) {
-    console.log(`Client connected: ${client.id}`);
+  handleConnection() {
+    return;
   }
 
   /**Handle Client Disconnect */
-  handleDisconnect(client: any) {
-    console.log(`Client disconnected: ${client.id}`);
+  handleDisconnect(@ConnectedSocket() client: Socket) {
+    if (this.rooms[client.id]) {
+      this.rooms[client.id].forEach((room) => {
+        client.to(room).emit('user_disconnect', { sessionId: client.id });
+      });
+
+      delete this.rooms[client.id];
+    }
   }
 
-  /**Guild User online */
-  @SubscribeMessage('user_online')
-  async userOnline(
+  @SubscribeMessage('activity_status')
+  async activityStatus(
     @MessageBody('guildId') guildId: string,
     @MessageBody('activityStatus') activityStatus: GuildUserActivityDto,
     @ConnectedSocket() client: Socket,
   ) {
-    if (client) {
-      client.join(guildId);
+    client.join(guildId);
+
+    if (!this.rooms[client.id]) {
+      this.rooms[client.id] = [];
     }
+    this.rooms[client.id].push(guildId);
 
-    const cacheKey = `ws-guild:${guildId}`;
-    const usersActivityStatus: GuildUserActivityDto[] = JSON.parse(
-      await this.redisClient.get(cacheKey),
-    );
-
-    if (!usersActivityStatus) {
-      await this.redisClient.set(cacheKey, JSON.stringify([activityStatus]));
-    } else {
-      const userActivityIndex = usersActivityStatus.findIndex(
-        (item) => item.userId === activityStatus.userId,
-      );
-
-      if (userActivityIndex !== -1) {
-        // Replace the entire object
-        usersActivityStatus[userActivityIndex] = activityStatus;
-        await this.redisClient.set(
-          cacheKey,
-          JSON.stringify(usersActivityStatus),
-        );
-      }
-    }
-
-    client.to(guildId).emit('user_online', usersActivityStatus);
-  }
-
-  /**Guild User Activity Status Update */
-  @SubscribeMessage('user_activity_status_update')
-  async activityStatusUpdate(
-    @MessageBody('guildId') guildId: string,
-    @MessageBody('activityStatus') activityStatus: GuildUserActivityDto,
-    @ConnectedSocket() client: Socket,
-  ) {
-    if (client) {
-      client.join(guildId);
-    }
-
-    const cacheKey = `ws-guild:${guildId}`;
-    const usersActivityStatus: GuildUserActivityDto[] = JSON.parse(
-      await this.redisClient.get(cacheKey),
-    );
-
-    if (!usersActivityStatus) {
-      await this.redisClient.set(cacheKey, JSON.stringify([activityStatus]));
-    } else {
-      const userActivityIndex = usersActivityStatus.findIndex(
-        (item) => item.userId === activityStatus.userId,
-      );
-
-      if (userActivityIndex !== -1) {
-        // Replace the entire object
-        usersActivityStatus[userActivityIndex] = activityStatus;
-        await this.redisClient.set(
-          cacheKey,
-          JSON.stringify(usersActivityStatus),
-        );
-      }
-    }
+    activityStatus.sessionId = client.id;
+    client.in(guildId).emit('activity_status', activityStatus);
   }
 }

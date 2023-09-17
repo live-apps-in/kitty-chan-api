@@ -5,6 +5,14 @@ export class GuildUserActivityDto {
   @IsNotEmpty()
   userId: string;
 
+  @IsMongoId()
+  @IsNotEmpty()
+  sessionId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  status: string;
+
   @IsString()
   @IsNotEmpty()
   page: string;
