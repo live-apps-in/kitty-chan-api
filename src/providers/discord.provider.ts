@@ -8,8 +8,8 @@ const client = new Client({
   logs: false,
   redisOptions: {
     db: 0,
-    host: 'kittychan-redis',
-    port: (process.env.REDIS_PORT as any) || 6379,
+    host: process.env.REDIS_HOST,
+    port: 6379,
     pass: process.env.REDIS_PASS,
   },
 });

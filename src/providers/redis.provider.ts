@@ -3,10 +3,10 @@ import { Redis } from 'ioredis';
 import { PROVIDER_TYPES } from 'src/core/provider.types';
 
 const redisClient = new Redis({
-  host: 'kittychan-redis',
-  db: Number(process.env.REDIS_DB),
+  host: process.env.REDIS_HOST,
+  db: 1,
   password: process.env.REDIS_PASS,
-  port: Number(process.env.REDIS_PORT) || 6379,
+  port: 6379,
   retryStrategy: () => {
     return null;
   },
