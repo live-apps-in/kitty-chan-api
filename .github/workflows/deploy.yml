@@ -30,10 +30,10 @@ jobs:
             --build-arg KITTY_CHAN_TOKEN=${{ secrets.KITTY_CHAN_TOKEN }} \
             --build-arg DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }} \
             --build-arg DISCORD_CLIENT_SECRET=${{ secrets.DISCORD_CLIENT_SECRET }} \
-            --build-arg DISCORD_CALLBACK_URL=${{ secrets.DISCORD_CALLBACK_URL }} \
-            --build-arg JWT_SECRET=${{ vars.JWT_SECRET }} \
+            --build-arg DISCORD_CALLBACK_URL=${{ vars.DISCORD_CALLBACK_URL }} \
+            --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
             --build-arg REDIS_HOST=${{ vars.REDIS_HOST }} \
-            --build-arg REDIS_PASS=${{ vars.REDIS_PASS }} \
+            --build-arg REDIS_PASS=${{ secrets.REDIS_PASS }} \
             --build-arg REDIS_DB=${{ vars.REDIS_DB }} \
             --build-arg MONGO_URI=${{ secrets.MONGO_URI }} \
             -t jagalive/kittychan-api:${{ github.sha }} .
