@@ -27,12 +27,12 @@ export class AuthService {
   async discordLogin(code: string) {
     const getToken = await this.discordAuth.token(code);
 
-    ///Fetch Discord User profile
+    /**Fetch Discord User profile */
     const discordUserProfile = await this.discordClient.user.profile(
       getToken.access_token,
     );
 
-    ///Fnd or Create Local user
+    /**Find or create local user */
     let localUserId: string;
 
     const localUser = await this.userRepository.getByDiscordId(
@@ -49,19 +49,19 @@ export class AuthService {
       localUserId = createdUser.id;
       await this.authModel.insertMany({ userId: createdUser._id });
     } else {
-      //Update local Discord profile
+      /**Update local user profile */
       await this.userRepository.update(new Types.ObjectId(localUserId), {
         discord: discordUserProfile,
       });
     }
 
-    ///Sync User & Bot mutual guilds
+    /**Sync user & bot mutual guilds */
     await this.userService.syncMutualGuilds(
       getToken.access_token,
       new Types.ObjectId(localUserId),
     );
 
-    ///Create session for the user
+    /**Create auth session */
     const sessionId = v4();
     const jwt = await this.jwtService.signAsync(
       {
