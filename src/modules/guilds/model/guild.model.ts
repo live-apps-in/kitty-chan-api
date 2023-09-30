@@ -12,17 +12,14 @@ export class Guild {
   @Prop()
   ownerId: string;
 
-  @Prop()
-  icon: string;
-
   @Prop({ type: Array<GuildStaffDto>, default: [] })
   staffs: GuildStaffDto[];
 
   @Prop()
-  tags: string[];
+  icon: string;
 
-  @Prop({ type: Number })
-  messageCount: number;
+  @Prop()
+  tags: string[];
 }
 
 export const GuildSchema = SchemaFactory.createForClass(Guild);
