@@ -39,7 +39,8 @@ export class GuildController {
   }
 
   /**View All Channels of a Guild */
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
   @Get('channels')
   async getAllChannels(@ExtractContext() { guildId }: UserRequestContext) {
     return this.guildService.getChannels(guildId);
