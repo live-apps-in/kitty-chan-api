@@ -38,6 +38,13 @@ export class GuildController {
     return this.guildService.wildcardGuildUserSearchByName(guildId, name);
   }
 
+  /**View All Channels of a Guild */
+  @UseGuards(AuthGuard)
+  @Get('channels')
+  async getAllChannels(@ExtractContext() { guildId }: UserRequestContext) {
+    return this.guildService.getChannels(guildId);
+  }
+
   /**Get guild by id */
   @UseGuards(AuthGuard, GuildAccess)
   @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN, ROLES.GUILD_MEMBER)

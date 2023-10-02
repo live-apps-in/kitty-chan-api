@@ -55,6 +55,14 @@ export class GuildService {
     );
   }
 
+  async getChannels(guildId: string) {
+    const channels = await this.discordClient.channel.fetchAll(guildId);
+
+    return channels
+      .filter((obj) => obj.type === 0)
+      .map(({ id, name }) => ({ id, name }));
+  }
+
   /**
    * Use for migration or scheduled sync
    */
