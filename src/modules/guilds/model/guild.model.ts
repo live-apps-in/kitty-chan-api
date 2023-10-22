@@ -12,11 +12,14 @@ export class Guild {
   @Prop()
   ownerId: string;
 
-  @Prop({ type: Array<GuildStaffDto>, default: [] })
-  staffs: GuildStaffDto[];
-
   @Prop()
   icon: string;
+
+  @Prop()
+  membersCount: number;
+
+  @Prop({ type: Array<GuildStaffDto>, default: [] })
+  staffs: GuildStaffDto[];
 
   @Prop()
   tags: string[];

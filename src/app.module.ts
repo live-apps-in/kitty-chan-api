@@ -8,6 +8,7 @@ import { TemplateModule } from 'src/modules/templates/templates.module';
 import { LoggerModule } from 'src/modules/logger/logger.module';
 import { LanguageModule } from 'src/modules/language/language.module';
 import { PortalModule } from 'src/modules/portal/portal.module';
+import { AnalyticsModule } from 'src/modules/analytics/analytics.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PortalModule } from 'src/modules/portal/portal.module';
     LanguageModule,
     TemplateModule,
     PortalModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [],
