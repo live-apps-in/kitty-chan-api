@@ -13,6 +13,12 @@ export class User {
 
   @Prop({ type: [String] })
   guilds: string[];
+
+  @Prop()
+  activityStatus: string;
+
+  @Prop()
+  activities: any[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

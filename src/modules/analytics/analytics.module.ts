@@ -15,6 +15,7 @@ import { Auth, AuthSchema } from 'src/modules/auth/model/auth.model';
 import { GuildModule } from 'src/modules/guilds/guild.module';
 import { Guild, GuildSchema } from 'src/modules/guilds/model/guild.model';
 import { Roles, RolesSchema } from 'src/modules/guilds/model/roles.model';
+import { User, UserSchema } from 'src/modules/users/model/user.model';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { Roles, RolesSchema } from 'src/modules/guilds/model/roles.model';
       { name: Auth.name, schema: AuthSchema },
       { name: Roles.name, schema: RolesSchema },
       { name: Guild.name, schema: GuildSchema },
+      { name: User.name, schema: UserSchema },
     ]),
     AuthModule,
     GuildModule,
