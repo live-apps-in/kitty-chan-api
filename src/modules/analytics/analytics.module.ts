@@ -2,14 +2,8 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AnalyticsController } from 'src/modules/analytics/analytics.controller';
 import { AnalyticsService } from 'src/modules/analytics/analytics.service';
-import {
-  MemberLog,
-  MemberLogSchema,
-} from 'src/modules/analytics/model/member_log.model';
-import {
-  MessageLog,
-  MessageLogSchema,
-} from 'src/modules/analytics/model/message_log.model';
+import { MemberLogSchema } from 'src/modules/analytics/model/member_log.model';
+import { MessageLogSchema } from 'src/modules/analytics/model/message_log.model';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { Auth, AuthSchema } from 'src/modules/auth/model/auth.model';
 import { GuildModule } from 'src/modules/guilds/guild.module';
@@ -20,8 +14,8 @@ import { User, UserSchema } from 'src/modules/users/model/user.model';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: MessageLog.name, schema: MessageLogSchema },
-      { name: MemberLog.name, schema: MemberLogSchema },
+      { name: 'message_logs', schema: MessageLogSchema },
+      { name: 'member_logs', schema: MemberLogSchema },
       { name: Auth.name, schema: AuthSchema },
       { name: Roles.name, schema: RolesSchema },
       { name: Guild.name, schema: GuildSchema },
