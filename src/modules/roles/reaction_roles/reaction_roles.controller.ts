@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -56,5 +57,15 @@ export class ReactionRolesController {
       reactionRoleId,
       reactionRolesDto,
     );
+  }
+
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Delete(':id')
+  async delete(
+    @ExtractContext() { guildId }: UserRequestContext,
+    @Param('id') reactionRoleId: string,
+  ) {
+    return this.reactionRolesService.delete(guildId, reactionRoleId);
   }
 }

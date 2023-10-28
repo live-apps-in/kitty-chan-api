@@ -19,6 +19,7 @@ export class ReactionRolesService {
   ) {
     const getReactionRole = await this.reactionRolesModel.findOne({
       name: reactionRoleDto.name,
+      guildId,
     });
 
     if (getReactionRole) {
@@ -45,23 +46,31 @@ export class ReactionRolesService {
   ) {
     const getReactionRole = await this.reactionRolesModel.findOne({
       _id: reactionRoleId,
+      guildId,
     });
 
-    if (getReactionRole.name !== reactionRoleDto.name) {
+    if (getReactionRole?.name !== reactionRoleDto.name) {
       const getReactionRoleByName = await this.reactionRolesModel.findOne({
         name: reactionRoleDto.name,
+        guildId,
       });
+
       if (getReactionRoleByName) {
         throw new ConflictException(
           'Reaction Role with this name already exists!',
         );
       }
     }
+
     await this.reactionRolesModel.updateOne(
       { _id: reactionRoleId, guildId },
       {
         $set: reactionRoleDto,
       },
     );
+  }
+
+  async delete(guildId: string, reactionRoleId: string) {
+    await this.reactionRolesModel.deleteOne({ _id: reactionRoleId, guildId });
   }
 }
