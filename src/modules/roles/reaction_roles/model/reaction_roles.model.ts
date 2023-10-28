@@ -9,19 +9,22 @@ export class ReactionRoles {
   description: string;
 
   @Prop()
+  guildId: string;
+
+  @Prop()
   messageId: string;
 
   @Prop()
   roleEmojiMapping: any[];
 
-  @Prop({ type: Object })
-  templateConfig: any;
+  @Prop()
+  templateId: string;
 
   @Prop({ default: false })
   isActive: boolean;
 
-  @Prop()
-  createdAt: string;
+  @Prop({ type: Date, default: new Date() })
+  createdAt: Date;
 }
 
 export const ReactionRolesSchema = SchemaFactory.createForClass(ReactionRoles);
