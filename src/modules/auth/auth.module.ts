@@ -19,6 +19,8 @@ import { DiscordProvider } from 'src/providers/discord.provider';
   ],
   controllers: [AuthController],
   providers: [AuthService, DiscordAuthService, DiscordProvider],
-  exports: [],
+  exports: [
+    MongooseModule.forFeature([{ name: Auth.name, schema: AuthSchema }]),
+  ],
 })
 export class AuthModule {}

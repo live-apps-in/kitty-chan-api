@@ -9,11 +9,13 @@ import { LoggerModule } from 'src/modules/logger/logger.module';
 import { LanguageModule } from 'src/modules/language/language.module';
 import { PortalModule } from 'src/modules/portal/portal.module';
 import { AnalyticsModule } from 'src/modules/analytics/analytics.module';
+import { RoleModule } from 'src/modules/roles/role.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot(process.env.MONGO_URI),
     AuthModule,
+    RoleModule,
     GuildModule,
     GreetModule,
     LoggerModule,

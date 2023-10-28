@@ -5,24 +5,18 @@ import { AnalyticsService } from 'src/modules/analytics/analytics.service';
 import { MemberLogSchema } from 'src/modules/analytics/model/member_log.model';
 import { MessageLogSchema } from 'src/modules/analytics/model/message_log.model';
 import { AuthModule } from 'src/modules/auth/auth.module';
-import { Auth, AuthSchema } from 'src/modules/auth/model/auth.model';
 import { GuildModule } from 'src/modules/guilds/guild.module';
-import { Guild, GuildSchema } from 'src/modules/guilds/model/guild.model';
-import { Roles, RolesSchema } from 'src/modules/guilds/model/roles.model';
-import { User, UserSchema } from 'src/modules/users/model/user.model';
+import { UserModule } from 'src/modules/users/user.module';
 
 @Module({
   imports: [
+    AuthModule,
+    GuildModule,
+    UserModule,
     MongooseModule.forFeature([
       { name: 'message_logs', schema: MessageLogSchema },
       { name: 'member_logs', schema: MemberLogSchema },
-      { name: Auth.name, schema: AuthSchema },
-      { name: Roles.name, schema: RolesSchema },
-      { name: Guild.name, schema: GuildSchema },
-      { name: User.name, schema: UserSchema },
     ]),
-    AuthModule,
-    GuildModule,
   ],
   providers: [AnalyticsService],
   controllers: [AnalyticsController],
