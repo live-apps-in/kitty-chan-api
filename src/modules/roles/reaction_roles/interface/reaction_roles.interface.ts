@@ -2,6 +2,8 @@ export class IReactionRoles {
   name: string;
   description: string;
   guildId: string;
+  channelId: string;
+  messageId?: string;
   userId: string;
   roleEmojiMapping: IReactionRolesRoleEmojiMapping[];
   templateId: string;
@@ -10,7 +12,6 @@ export class IReactionRoles {
 }
 
 interface IReactionRolesRoleEmojiMapping {
-  emojiType: string;
-  emoji: string;
+  emoji: any;
   roleId: string;
 }

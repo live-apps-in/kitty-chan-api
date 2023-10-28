@@ -8,6 +8,7 @@ import { TemplateRepo } from 'src/modules/templates/repository/template.reposito
 import { TemplateController } from 'src/modules/templates/template.controller';
 import { TemplateService } from 'src/modules/templates/template.service';
 import { UserModule } from 'src/modules/users/user.module';
+import { DiscordProvider } from 'src/providers/discord.provider';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { UserModule } from 'src/modules/users/user.module';
       { name: 'discord_templates', schema: TemplateSchema },
     ]),
   ],
-  providers: [TemplateService, TemplateRepo, GuildRepo],
+  providers: [TemplateService, TemplateRepo, GuildRepo, DiscordProvider],
   controllers: [TemplateController],
+  exports: [TemplateService],
 })
 export class TemplateModule {}

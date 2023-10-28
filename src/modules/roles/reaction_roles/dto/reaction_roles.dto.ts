@@ -3,6 +3,7 @@ import {
   ArrayNotEmpty,
   IsBoolean,
   IsNotEmpty,
+  IsObject,
   IsOptional,
   IsString,
   ValidateNested,
@@ -25,6 +26,10 @@ export class ReactionRolesDto {
 
   @IsString()
   @IsNotEmpty()
+  channelId: string;
+
+  @IsString()
+  @IsNotEmpty()
   templateId: string;
 
   @IsBoolean()
@@ -33,13 +38,9 @@ export class ReactionRolesDto {
 }
 
 class ReactionRolesRoleEmojiMapping {
-  @IsString()
+  @IsObject()
   @IsNotEmpty()
-  emojiType: string;
-
-  @IsString()
-  @IsNotEmpty()
-  emoji: string;
+  emoji: any;
 
   @IsString()
   @IsNotEmpty()
