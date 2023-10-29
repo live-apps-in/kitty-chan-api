@@ -4,7 +4,7 @@ export class IReactionRoles {
   guildId: string;
   channelId: string;
   messageId?: string;
-  userId: string;
+  userId?: string;
   roleEmojiMapping: IReactionRolesRoleEmojiMapping[];
   templateId: string;
   isActive: string;

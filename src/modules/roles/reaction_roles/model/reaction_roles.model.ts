@@ -12,6 +12,9 @@ export class ReactionRoles {
   guildId: string;
 
   @Prop()
+  channelId: string;
+
+  @Prop()
   messageId: string;
 
   @Prop()

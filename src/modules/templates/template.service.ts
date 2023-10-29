@@ -1,6 +1,7 @@
-import { DiscordEmbeds } from '@live-apps/discord';
+import { Client, DiscordEmbeds } from '@live-apps/discord';
 import { Inject, Injectable } from '@nestjs/common';
 import { DiscordTemplateType } from 'src/common/enum/discord.template.enum';
+import { PROVIDER_TYPES } from 'src/core/provider.types';
 import { GuildRepo } from 'src/modules/guilds/repo/guild.repo';
 import { TemplateDto } from 'src/modules/templates/dto/template.dto';
 import { TemplateTarget } from 'src/modules/templates/enum/template.interface';
@@ -11,6 +12,8 @@ export class TemplateService {
   constructor(
     @Inject(TemplateRepo) private readonly templateRepo: TemplateRepo,
     @Inject(GuildRepo) private readonly guildRepo: GuildRepo,
+    @Inject(PROVIDER_TYPES.DiscordClient)
+    private readonly discordClient: Client,
   ) {}
 
   async create(guildId: string, userId: string, templateDto: TemplateDto) {
@@ -65,6 +68,52 @@ export class TemplateService {
         type: DiscordTemplateType.EMBED,
         template: embedTemplate,
       };
+    }
+  }
+
+  async createTemplateMessageInGuild(channelId: string, template: any) {
+    let createGuildMessage;
+
+    if (template.type === DiscordTemplateType.PLAIN) {
+      createGuildMessage = await this.discordClient.message.send(
+        channelId,
+        template.template as any,
+      );
+
+      return createGuildMessage;
+    } else if (template.type === DiscordTemplateType.EMBED) {
+      createGuildMessage = await this.discordClient.message.sendEmbed(
+        channelId,
+        [template.template] as any,
+      );
+
+      return createGuildMessage;
+    }
+  }
+
+  async editTemplateMessageInGuild(
+    channelId: string,
+    messageId: string,
+    template: any,
+  ) {
+    let editedGuildMessage;
+
+    if (template.type === DiscordTemplateType.PLAIN) {
+      editedGuildMessage = await this.discordClient.message.edit(
+        channelId,
+        messageId,
+        template.template as any,
+      );
+
+      return editedGuildMessage;
+    } else if (template.type === DiscordTemplateType.EMBED) {
+      editedGuildMessage = await this.discordClient.message.editEmbed(
+        channelId,
+        messageId,
+        [template.template] as any,
+      );
+
+      return editedGuildMessage;
     }
   }
 

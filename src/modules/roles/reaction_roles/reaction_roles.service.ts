@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DiscordTemplateType } from 'src/common/enum/discord.template.enum';
 import { PROVIDER_TYPES } from 'src/core/provider.types';
 import { ReactionRolesDto } from 'src/modules/roles/reaction_roles/dto/reaction_roles.dto';
 import { IReactionRoles } from 'src/modules/roles/reaction_roles/interface/reaction_roles.interface';
@@ -41,20 +40,14 @@ export class ReactionRolesService {
     const payload: IReactionRoles = {
       ...reactionRoleDto,
       guildId,
-      userId,
       channelId: reactionRoleDto.channelId,
     };
 
-    const reactionRole = await new this.reactionRolesModel(payload).save();
-
     const { messageId } = await this.createReactionRoleInGuild(payload);
+    payload.messageId = messageId;
+    payload.userId = userId;
 
-    await this.reactionRolesModel.updateOne(
-      { _id: reactionRole._id },
-      {
-        $set: { messageId },
-      },
-    );
+    return new this.reactionRolesModel(payload).save();
   }
 
   async get(guildId: string) {
@@ -84,12 +77,21 @@ export class ReactionRolesService {
       }
     }
 
-    await this.reactionRolesModel.updateOne(
-      { _id: reactionRoleId, guildId },
-      {
-        $set: reactionRoleDto,
-      },
-    );
+    const payload: IReactionRoles = {
+      ...reactionRoleDto,
+      guildId,
+      channelId: reactionRoleDto.channelId,
+    };
+
+    await Promise.all([
+      this.updateReactionRoleInGuild(reactionRoleId, payload),
+      this.reactionRolesModel.updateOne(
+        { _id: reactionRoleId, guildId },
+        {
+          $set: reactionRoleDto,
+        },
+      ),
+    ]);
   }
 
   async delete(guildId: string, reactionRoleId: string) {
@@ -97,34 +99,21 @@ export class ReactionRolesService {
   }
 
   private async createReactionRoleInGuild(reactionRole: IReactionRoles) {
-    /**fetch and build Template */
-    const buildTemplate = await this.templateService.buildDiscordTemplate(
-      reactionRole.templateId,
-    );
+    const { channelId, templateId, roleEmojiMapping } = reactionRole;
+    /**Build Template */
+    const buildTemplate =
+      await this.templateService.buildDiscordTemplate(templateId);
     if (!buildTemplate) {
       throw new BadRequestException('Template not set for this reaction role!');
     }
 
-    let createGuildMessage;
-    if (buildTemplate.type === DiscordTemplateType.PLAIN) {
-      createGuildMessage = await this.discordClient.message.send(
-        reactionRole.channelId,
-        buildTemplate.template as any,
+    const createGuildMessage =
+      await this.templateService.createTemplateMessageInGuild(
+        channelId,
+        buildTemplate,
       );
-    } else if (buildTemplate.type === DiscordTemplateType.EMBED) {
-      createGuildMessage = await this.discordClient.message.sendEmbed(
-        reactionRole.channelId,
-        [buildTemplate.template] as any,
-      );
-    }
-
-    if (!createGuildMessage.id) {
-      throw new BadRequestException('Unable to create reaction role!');
-    }
 
     /**React Emoji to created message */
-    const { roleEmojiMapping, channelId } = reactionRole;
-
     for (let index = 0; index < roleEmojiMapping.length; index++) {
       const emoji = roleEmojiMapping[index].emoji;
 
@@ -138,5 +127,77 @@ export class ReactionRolesService {
     }
 
     return { messageId: createGuildMessage.id };
+  }
+
+  private async updateReactionRoleInGuild(
+    reactionRoleId: string,
+    reactionRole: IReactionRoles,
+  ) {
+    const { channelId, roleEmojiMapping } = reactionRole;
+
+    const getReactionRole = await this.reactionRolesModel.findOne({
+      _id: reactionRoleId,
+    });
+    if (!getReactionRole) {
+      throw new BadRequestException('Unable to edit Reaction role!');
+    }
+
+    /**Build Template */
+    const buildTemplate = await this.templateService.buildDiscordTemplate(
+      reactionRole.templateId,
+    );
+    if (!buildTemplate) {
+      throw new BadRequestException('Template not set for this reaction role!');
+    }
+
+    await this.templateService.editTemplateMessageInGuild(
+      channelId,
+      getReactionRole.messageId,
+      buildTemplate,
+    );
+
+    const emojiToBeUpdated: any[] = this.compareRolesMapping(
+      roleEmojiMapping,
+      getReactionRole.roleEmojiMapping,
+    );
+
+    for (let index = 0; index < emojiToBeUpdated.length; index++) {
+      const emoji = emojiToBeUpdated[index].emoji;
+
+      await this.discordClient.message.react(
+        channelId,
+        getReactionRole.messageId,
+        emoji.type === 'standard'
+          ? encodeURIComponent(emoji.standardEmoji)
+          : encodeURIComponent(`${emoji.name}:${emoji.id}`),
+      );
+    }
+  }
+
+  private compareRolesMapping(newMapping: any[], oldMapping: any[]) {
+    const roleEmojiMapDiff = [];
+
+    for (let i = 0; i < newMapping.length; i++) {
+      for (let j = 0; j < oldMapping.length; j++) {
+        if (newMapping[i].roleId === oldMapping[j].roleId) {
+          // assume both objects have a "roleId" property to uniquely identify them
+          if (
+            newMapping[i].emoji.type === 'standard' &&
+            newMapping[i].emoji.standardEmoji !==
+              oldMapping[j].emoji.standardEmoji
+          ) {
+            roleEmojiMapDiff.push(newMapping[i]); // push both objects with different values into the new array
+          } else if (
+            newMapping[i].emoji.type === 'guild' &&
+            newMapping[i].emoji.id !== oldMapping[j].emoji.id
+          ) {
+            roleEmojiMapDiff.push(newMapping[i]); // push both objects with different values into the new array
+          }
+          break; // move on to the next object in arr1
+        }
+      }
+    }
+
+    return roleEmojiMapDiff;
   }
 }
