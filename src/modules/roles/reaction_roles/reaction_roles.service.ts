@@ -155,49 +155,45 @@ export class ReactionRolesService {
       getReactionRole.messageId,
       buildTemplate,
     );
-
-    const emojiToBeUpdated: any[] = this.compareRolesMapping(
+    const { addedRoles, removedRoles } = this.compareRolesMapping(
       roleEmojiMapping,
       getReactionRole.roleEmojiMapping,
     );
 
-    for (let index = 0; index < emojiToBeUpdated.length; index++) {
-      const emoji = emojiToBeUpdated[index].emoji;
+    if (addedRoles.length !== 0) {
+      for (let index = 0; index < addedRoles.length; index++) {
+        const emoji = addedRoles[index].emoji;
 
-      await this.discordClient.message.react(
-        channelId,
-        getReactionRole.messageId,
-        emoji.type === 'standard'
-          ? encodeURIComponent(emoji.standardEmoji)
-          : encodeURIComponent(`${emoji.name}:${emoji.id}`),
-      );
+        await this.discordClient.message.react(
+          channelId,
+          getReactionRole.messageId,
+          emoji.type === 'standard'
+            ? encodeURIComponent(emoji.standardEmoji)
+            : encodeURIComponent(`${emoji.name}:${emoji.id}`),
+        );
+      }
     }
   }
 
   private compareRolesMapping(newMapping: any[], oldMapping: any[]) {
-    const roleEmojiMapDiff = [];
+    const addedRoles = newMapping.filter(
+      (newRole) =>
+        !oldMapping.find(
+          (oldRole) =>
+            oldRole.emoji.standardEmoji === newRole.emoji.standardEmoji &&
+            oldRole.roleId === newRole.roleId,
+        ),
+    );
 
-    for (let i = 0; i < newMapping.length; i++) {
-      for (let j = 0; j < oldMapping.length; j++) {
-        if (newMapping[i].roleId === oldMapping[j].roleId) {
-          // assume both objects have a "roleId" property to uniquely identify them
-          if (
-            newMapping[i].emoji.type === 'standard' &&
-            newMapping[i].emoji.standardEmoji !==
-              oldMapping[j].emoji.standardEmoji
-          ) {
-            roleEmojiMapDiff.push(newMapping[i]); // push both objects with different values into the new array
-          } else if (
-            newMapping[i].emoji.type === 'guild' &&
-            newMapping[i].emoji.id !== oldMapping[j].emoji.id
-          ) {
-            roleEmojiMapDiff.push(newMapping[i]); // push both objects with different values into the new array
-          }
-          break; // move on to the next object in arr1
-        }
-      }
-    }
+    const removedRoles = oldMapping.filter(
+      (oldRole) =>
+        !newMapping.find(
+          (newRole) =>
+            newRole.emoji.standardEmoji === oldRole.emoji.standardEmoji &&
+            newRole.roleId === oldRole.roleId,
+        ),
+    );
 
-    return roleEmojiMapDiff;
+    return { addedRoles, removedRoles };
   }
 }
