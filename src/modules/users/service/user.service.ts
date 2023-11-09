@@ -3,6 +3,7 @@ import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { PROVIDER_TYPES } from 'src/core/provider.types';
 import { GuildRepo } from 'src/modules/guilds/repo/guild.repo';
+import { UserProfileDto } from 'src/modules/users/dto/user-profile.dto';
 import { UserRepository } from 'src/modules/users/repository/user.repo';
 
 @Injectable()
@@ -16,7 +17,7 @@ export class UserService {
 
   /**User Profile */
   async profile(userId: Types.ObjectId) {
-    return this.userRepo.findById(userId);
+    return new UserProfileDto(await this.userRepo.findById(userId));
   }
 
   async syncMutualGuilds(accessToken: string, userId: Types.ObjectId) {
