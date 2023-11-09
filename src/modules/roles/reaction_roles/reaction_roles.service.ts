@@ -95,7 +95,19 @@ export class ReactionRolesService {
   }
 
   async delete(guildId: string, reactionRoleId: string) {
-    await this.reactionRolesModel.deleteOne({ _id: reactionRoleId, guildId });
+    const { channelId, messageId } =
+      (await this.reactionRolesModel.findOne({
+        _id: reactionRoleId,
+      })) ?? {};
+
+    if (!messageId) {
+      throw new BadRequestException('Reaction role not found');
+    }
+
+    await Promise.all([
+      this.reactionRolesModel.deleteOne({ _id: reactionRoleId, guildId }),
+      this.discordClient.message.delete(channelId, messageId),
+    ]);
   }
 
   private async createReactionRoleInGuild(reactionRole: IReactionRoles) {
@@ -165,6 +177,20 @@ export class ReactionRolesService {
         const emoji = addedRoles[index].emoji;
 
         await this.discordClient.message.react(
+          channelId,
+          getReactionRole.messageId,
+          emoji.type === 'standard'
+            ? encodeURIComponent(emoji.standardEmoji)
+            : encodeURIComponent(`${emoji.name}:${emoji.id}`),
+        );
+      }
+    }
+
+    if (removedRoles.length !== 0) {
+      for (let index = 0; index < removedRoles.length; index++) {
+        const emoji = removedRoles[index].emoji;
+
+        await this.discordClient.message.removeReaction(
           channelId,
           getReactionRole.messageId,
           emoji.type === 'standard'
