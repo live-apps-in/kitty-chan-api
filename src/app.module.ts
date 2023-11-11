@@ -10,6 +10,7 @@ import { LanguageModule } from 'src/modules/language/language.module';
 import { PortalModule } from 'src/modules/portal/portal.module';
 import { AnalyticsModule } from 'src/modules/analytics/analytics.module';
 import { RoleModule } from 'src/modules/roles/role.module';
+import { CommunityModule } from 'src/modules/community/community.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { RoleModule } from 'src/modules/roles/role.module';
     TemplateModule,
     PortalModule,
     AnalyticsModule,
+    CommunityModule,
   ],
   controllers: [AppController],
   providers: [],

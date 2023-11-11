@@ -21,6 +21,11 @@ import { DiscordProvider } from 'src/providers/discord.provider';
   ],
   providers: [TemplateService, TemplateRepo, GuildRepo, DiscordProvider],
   controllers: [TemplateController],
-  exports: [TemplateService],
+  exports: [
+    TemplateService,
+    MongooseModule.forFeature([
+      { name: 'discord_templates', schema: TemplateSchema },
+    ]),
+  ],
 })
 export class TemplateModule {}
