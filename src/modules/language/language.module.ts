@@ -10,6 +10,7 @@ import { LanguageLibsSchema } from 'src/modules/language/models/language_libs.mo
 import { RedisProvider } from 'src/providers/redis.provider';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { UserModule } from 'src/modules/users/user.module';
+import { EsProvider } from 'src/providers/es.provider';
 
 @Module({
   imports: [
@@ -21,7 +22,13 @@ import { UserModule } from 'src/modules/users/user.module';
     ]),
     GuildModule,
   ],
-  providers: [LanguageService, LanguageLibService, FeaturesRepo, RedisProvider],
+  providers: [
+    LanguageService,
+    LanguageLibService,
+    FeaturesRepo,
+    RedisProvider,
+    EsProvider,
+  ],
   controllers: [LanguageController, LanguageLibController],
 })
 export class LanguageModule {}

@@ -11,12 +11,10 @@ import { PortalModule } from 'src/modules/portal/portal.module';
 import { AnalyticsModule } from 'src/modules/analytics/analytics.module';
 import { RoleModule } from 'src/modules/roles/role.module';
 import { CommunityModule } from 'src/modules/community/community.module';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 
 @Module({
   imports: [
     MongooseModule.forRoot(process.env.MONGO_URI),
-    ElasticsearchModule.register({ node: process.env.ES_HOST }),
     AuthModule,
     RoleModule,
     GuildModule,

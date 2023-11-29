@@ -8,12 +8,15 @@ import { FeaturesRepo } from 'src/modules/features/repository/features.repo';
 import { LanguageDto } from 'src/modules/language/dto/language.dto';
 import { StrongLanguage } from 'src/modules/language/dto/strong_language.dto';
 import { LanguageLibs } from 'src/modules/language/models/language_libs.model';
+import { Client as EsClient } from '@elastic/elasticsearch';
 
 @Injectable()
 export class LanguageService {
   constructor(
     @Inject(FeaturesRepo) private readonly featuresRepo: FeaturesRepo,
     @Inject(PROVIDER_TYPES.RedisClient) private readonly redisClient: Redis,
+    @Inject(PROVIDER_TYPES.EsClient)
+    private readonly esClient: EsClient,
     @InjectModel('language_libs')
     private readonly languageLibsModel: Model<LanguageLibs>,
   ) {}
@@ -117,21 +120,25 @@ export class LanguageService {
       300,
     );
 
-    strongLanguageDto.languageConfig.map(async (e) => {
-      const languageLib = await this.languageLibsModel.findOne({
-        _id: e.whitelistLib,
-        guildId,
-      });
+    for (const languageConfig of strongLanguageDto.languageConfig) {
+      const languageLib = await this.languageLibsModel
+        .findOne({
+          _id: languageConfig.whitelistLib,
+          guildId,
+        })
+        .lean();
 
-      //Cache Data Libs
+      //Persist language data into Elastic search
       if (languageLib) {
-        this.redisClient.set(
-          `guild-${guildId}:languageLib-${e.whitelistLib}`,
-          JSON.stringify(languageLib.data),
-          'EX',
-          300,
-        );
+        const payload = { ...languageLib };
+        delete payload._id;
+
+        await this.esClient.index({
+          id: languageLib._id.toString(),
+          index: 'strong-language',
+          body: payload,
+        });
       }
-    });
+    }
   }
 }

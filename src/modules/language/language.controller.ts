@@ -44,7 +44,8 @@ export class LanguageController {
     return languageUpdateDto;
   }
 
-  /**Update Strong Language Config */
+  /**Strong Language */
+  //Update Strong Language Config
   @UseGuards(AuthGuard, GuildAccess)
   @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
   @Patch('strongLanguage')
