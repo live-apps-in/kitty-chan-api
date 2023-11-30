@@ -128,10 +128,9 @@ export class LanguageService {
         })
         .lean();
 
-      //Persist language data into Elastic search
+      //Persist language data to Elastic search
       if (languageLib) {
-        const payload = { ...languageLib };
-        delete payload._id;
+        const { _id, ...payload } = languageLib;
 
         await this.esClient.index({
           id: languageLib._id.toString(),
