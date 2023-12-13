@@ -11,6 +11,7 @@ import { RedisProvider } from 'src/providers/redis.provider';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { UserModule } from 'src/modules/users/user.module';
 import { EsProvider } from 'src/providers/es.provider';
+import { EsService } from 'src/common/service/es.service';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { EsProvider } from 'src/providers/es.provider';
     FeaturesRepo,
     RedisProvider,
     EsProvider,
+    EsService,
   ],
   controllers: [LanguageController, LanguageLibController],
 })

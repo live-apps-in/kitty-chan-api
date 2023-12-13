@@ -9,6 +9,9 @@ import { LanguageDto } from 'src/modules/language/dto/language.dto';
 import { StrongLanguage } from 'src/modules/language/dto/strong_language.dto';
 import { LanguageLibs } from 'src/modules/language/models/language_libs.model';
 import { Client as EsClient } from '@elastic/elasticsearch';
+import { LanguageFilter } from 'src/modules/language/dto/language_filter.dto';
+import { v4 } from 'uuid';
+import { EsService } from 'src/common/service/es.service';
 
 @Injectable()
 export class LanguageService {
@@ -17,10 +20,13 @@ export class LanguageService {
     @Inject(PROVIDER_TYPES.RedisClient) private readonly redisClient: Redis,
     @Inject(PROVIDER_TYPES.EsClient)
     private readonly esClient: EsClient,
+    @Inject(EsService)
+    private readonly esService: EsService,
     @InjectModel('language_libs')
     private readonly languageLibsModel: Model<LanguageLibs>,
   ) {}
 
+  /**View all language features config */
   async viewLanguage(guildId: string): Promise<LanguageDto> {
     const feature = await this.featuresRepo.findSingleFeature(
       guildId,
@@ -30,59 +36,7 @@ export class LanguageService {
     return feature;
   }
 
-  async updateLanguage(guildId: string, languageUpdateDto: LanguageDto) {
-    await this.featuresRepo.updateSingleFeature(
-      guildId,
-      FeaturesEnum.LANGUAGE,
-      languageUpdateDto,
-    );
-
-    //Update Feature Flag Cache
-    await Promise.all([
-      this.redisClient.set(
-        `guild-${guildId}:feature:strongLanguage`,
-        languageUpdateDto.strongLanguage.isActive.toString(),
-      ),
-
-      this.redisClient.set(
-        `guild-${guildId}:feature:strongLanguageConfig`,
-        JSON.stringify(languageUpdateDto.strongLanguage),
-      ),
-
-      this.redisClient.set(
-        `guild-${guildId}:feature:languageFilter`,
-        languageUpdateDto.languageFilter.isActive.toString(),
-      ),
-    ]);
-
-    //Cache Language Filter config
-    languageUpdateDto.languageFilter.languageFilterConfig.map(async (e) => {
-      this.redisClient.set(
-        `guild-${guildId}:feature:languageFilterConfig`,
-        JSON.stringify(languageUpdateDto.languageFilter.languageFilterConfig),
-        'EX',
-        300,
-      );
-
-      if (e.isActive) {
-        const languageLib = await this.languageLibsModel.findOne({
-          _id: e.languageLibId,
-          guildId,
-        });
-
-        //Cache Data Libs
-        if (languageLib) {
-          this.redisClient.set(
-            `guild-${guildId}:languageLib-${e.languageLibId}`,
-            JSON.stringify(languageLib.data),
-            'EX',
-            300,
-          );
-        }
-      }
-    });
-  }
-
+  /**Update Strong language config  */
   async updateStrongLanguage(
     guildId: string,
     strongLanguageDto: StrongLanguage,
@@ -106,21 +60,22 @@ export class LanguageService {
         strongLanguageDto.isActive.toString(),
       ),
 
+      //Cache Strong Language config
       this.redisClient.set(
         `guild-${guildId}:feature:strongLanguageConfig`,
         JSON.stringify(strongLanguageDto),
+        'EX',
+        300,
       ),
     ]);
 
-    //Cache Strong Language config
-    this.redisClient.set(
-      `guild-${guildId}:feature:strongLanguageConfig`,
-      JSON.stringify(strongLanguageDto),
-      'EX',
-      300,
-    );
-
+    //Store Language Lib data to Elastic search
     for (const languageConfig of strongLanguageDto.languageConfig) {
+      await this.esClient.deleteByQuery({
+        index: 'language-lib',
+        body: { query: { match: { refId: languageConfig.whitelistLib } } },
+      });
+
       const languageLib = await this.languageLibsModel
         .findOne({
           _id: languageConfig.whitelistLib,
@@ -130,13 +85,87 @@ export class LanguageService {
 
       //Persist language data to Elastic search
       if (languageLib) {
-        const { _id, ...payload } = languageLib;
+        for (const data of languageLib.data) {
+          const languageData = {
+            name: languageLib.name,
+            system: languageLib.system,
+            guildId: languageLib.guildId,
+            type: languageLib.type,
+            refId: languageLib._id,
+            data,
+          };
 
-        await this.esClient.index({
-          id: languageLib._id.toString(),
-          index: 'strong-language',
-          body: payload,
-        });
+          await this.esService.createOrUpdateIndex('language-lib', v4(), {
+            ...languageData,
+          });
+        }
+      }
+    }
+  }
+
+  async updateLanguageFilter(
+    guildId: string,
+    languageFilterDto: LanguageFilter,
+  ) {
+    const languageFeature = await this.featuresRepo.findSingleFeature(
+      guildId,
+      FeaturesEnum.LANGUAGE,
+    );
+    languageFeature.languageFilter = languageFilterDto;
+
+    await this.featuresRepo.updateSingleFeature(
+      guildId,
+      FeaturesEnum.LANGUAGE,
+      languageFeature,
+    );
+
+    //Update Feature Flag Cache
+    await Promise.all([
+      this.redisClient.set(
+        `guild-${guildId}:feature:languageFilter`,
+        languageFilterDto.isActive.toString(),
+      ),
+
+      //Cache Strong Language config
+      this.redisClient.set(
+        `guild-${guildId}:feature:languageFilterConfig`,
+        JSON.stringify(languageFilterDto),
+        'EX',
+        300,
+      ),
+    ]);
+
+    for (const languageConfig of languageFilterDto.languageFilterConfig) {
+      await this.esClient.deleteByQuery({
+        index: 'language-lib',
+        body: {
+          query: { match: { refId: languageConfig.languageLibId } },
+        },
+      });
+
+      const languageLib = await this.languageLibsModel
+        .findOne({
+          _id: languageConfig.languageLibId,
+          guildId,
+        })
+        .lean();
+
+      //Persist language data to Elastic search
+      if (languageLib) {
+        for (const data of languageLib.data) {
+          const languageData = {
+            name: languageLib.name,
+            system: languageLib.system,
+            guildId: languageLib.guildId,
+            type: languageLib.type,
+            refId: languageLib._id,
+            data,
+          };
+
+          await this.esService.createOrUpdateIndex('language-lib', v4(), {
+            ...languageData,
+          });
+        }
       }
     }
   }
