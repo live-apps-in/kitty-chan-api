@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import 'dotenv/config';
 import { Model, Types } from 'mongoose';
 import { PROVIDER_TYPES } from 'src/core/provider.types';
-import { Auth } from 'src/modules/auth/model/auth.model';
+import { AuthSession } from 'src/modules/auth/model/auth-session.model';
 import { DiscordAuthService } from 'src/modules/auth/service/discord_auth.service';
 import { UserRepository } from 'src/modules/users/repository/user.repo';
 import { UserService } from 'src/modules/users/service/user.service';
@@ -21,7 +21,8 @@ export class AuthService {
     @Inject(UserRepository) private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     @Inject(UserService) private readonly userService: UserService,
-    @InjectModel(Auth.name) private readonly authModel: Model<Auth>,
+    @InjectModel('auth_session')
+    private readonly authSessionModel: Model<AuthSession>,
   ) {}
 
   async discordLogin(code: string) {
@@ -47,7 +48,6 @@ export class AuthService {
       });
 
       localUserId = createdUser.id;
-      await this.authModel.insertMany({ userId: createdUser._id });
     } else {
       /**Update local user profile */
       await this.userRepository.update(new Types.ObjectId(localUserId), {
@@ -72,15 +72,11 @@ export class AuthService {
       { expiresIn: '7d' },
     );
 
-    await this.authModel.updateOne(
-      { userId: new Types.ObjectId(localUserId) },
-      {
-        discordAccessToken: getToken.access_token,
-        $push: {
-          sessions: sessionId,
-        },
-      },
-    );
+    await this.authSessionModel.insertMany({
+      userId: new Types.ObjectId(localUserId),
+      discordAccessToken: getToken.access_token,
+      sessionId,
+    });
 
     return {
       accessToken: jwt,
