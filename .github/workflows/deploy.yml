@@ -36,6 +36,7 @@ jobs:
             --build-arg REDIS_PASS=${{ secrets.REDIS_PASS }} \
             --build-arg REDIS_DB=${{ vars.REDIS_DB }} \
             --build-arg MONGO_URI=${{ secrets.MONGO_URI }} \
+            --build-arg ES_HOST=${{ vars.ES_HOST }} \
             -t jagalive/kittychan-api:${{ github.sha }} .
           docker tag jagalive/kittychan-api:${{ github.sha }} jagalive/kittychan-api:latest
         working-directory: ./

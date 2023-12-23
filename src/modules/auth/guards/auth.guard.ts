@@ -8,13 +8,14 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Auth } from 'src/modules/auth/model/auth.model';
+import { AuthSession } from 'src/modules/auth/model/auth-session.model';
 import { Req } from 'src/types/express.types';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    @InjectModel(Auth.name) private readonly authModel: Model<Auth>,
+    @InjectModel('auth_session')
+    private readonly authSessionModel: Model<AuthSession>,
     private readonly jwtService: JwtService,
   ) {}
   async canActivate(context: ExecutionContext) {
@@ -34,10 +35,13 @@ export class AuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET,
       });
 
-      const userAuth = await this.authModel.findOne({
-        sessions: decoded.sessionId,
+      const userAuth = await this.authSessionModel.findOne({
+        sessionId: decoded.sessionId,
       });
-      if (!userAuth) throw new Error();
+
+      if (!userAuth) {
+        throw new Error();
+      }
 
       const guildId = request.headers['x-guild-id'] as string;
       request.userData = { ...decoded, guildId };

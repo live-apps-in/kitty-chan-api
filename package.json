@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^7.17.12",
     "@live-apps/discord": "^1.0.18",
     "@nestjs/axios": "^3.0.0",
     "@nestjs/common": "^10.2.5",

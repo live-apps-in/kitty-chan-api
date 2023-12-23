@@ -25,7 +25,7 @@ export class LanguageLibController {
     return this.langLibService.viewLanguageLib(guildId);
   }
 
-  /**View custom Language Lib*/
+  /**Create custom Language Lib*/
   @UseGuards(AuthGuard, GuildAccess)
   @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
   @Post('/filters')

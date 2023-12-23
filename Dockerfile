@@ -31,6 +31,9 @@ ENV REDIS_DB $REDIS_DB
 ARG MONGO_URI
 ENV MONGO_URI $MONGO_URI
 
+ARG ES_HOST
+ENV ES_HOST $ES_HOST
+
 COPY . .
 RUN npm run build
 CMD ["node", "./dist/main.js"]
