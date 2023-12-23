@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Inject, Patch, Post, UseGuards } from '@nestjs/common';
 import {
   ExtractContext,
   UserRequestContext,
@@ -21,6 +21,20 @@ export class CommunityTemplateController {
   @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
   @Post()
   async createCommunityTemplate(
+    @ExtractContext() { guildId, userId }: UserRequestContext,
+    @Body() communityTemplateCreateDto: CommunityTemplateCreateDto,
+  ) {
+    return this.communityTemplateService.createCommunityTemplate(
+      guildId,
+      userId,
+      communityTemplateCreateDto,
+    );
+  }
+
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Patch()
+  async updateCommunityTemplate(
     @ExtractContext() { guildId, userId }: UserRequestContext,
     @Body() communityTemplateCreateDto: CommunityTemplateCreateDto,
   ) {
