@@ -11,6 +11,7 @@ import { PortalModule } from 'src/modules/portal/portal.module';
 import { AnalyticsModule } from 'src/modules/analytics/analytics.module';
 import { RoleModule } from 'src/modules/roles/role.module';
 import { CommunityModule } from 'src/modules/community/community.module';
+import { AutoSailModule } from 'src/modules/auto-sail/auto-sail.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { CommunityModule } from 'src/modules/community/community.module';
     PortalModule,
     AnalyticsModule,
     CommunityModule,
+    AutoSailModule,
   ],
   controllers: [AppController],
   providers: [],
