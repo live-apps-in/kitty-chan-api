@@ -1,11 +1,4 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  ValidateIf,
-  ValidateNested,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { AutoSailActionEvents } from 'src/modules/auto-sail/enum/auto-sail-action.enum';
 
 class ActionMessageCreateConfig {
