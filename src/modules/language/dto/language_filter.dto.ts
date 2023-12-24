@@ -10,19 +10,19 @@ import {
   IsObject,
 } from 'class-validator';
 import { FeatureDefault } from 'src/common/dto/FeatureDefault.dto';
-import { LanguageFilterAction } from 'src/modules/language/enum/lang_filter.enum';
+import { DiscordActions } from 'src/common/enum/discord-action.enum';
 
 class LanguageFilterTriggerAction {
   @IsNotEmpty()
-  @IsEnum(LanguageFilterAction)
-  public action: LanguageFilterAction;
+  @IsEnum(DiscordActions)
+  public action: DiscordActions;
 
   @IsNotEmpty()
-  @ValidateIf((o) => o.action === LanguageFilterAction.REACT)
+  @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REACT)
   public reactEmoji: string;
 
   @IsNotEmpty()
-  @ValidateIf((o) => o.action === LanguageFilterAction.REPLY)
+  @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REACT)
   public replyMessage: string;
 }
 

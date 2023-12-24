@@ -10,20 +10,20 @@ import {
 } from 'class-validator';
 import { Types } from 'mongoose';
 import { FeatureDefault } from 'src/common/dto/FeatureDefault.dto';
-import { LanguageFilterAction } from 'src/modules/language/enum/lang_filter.enum';
+import { DiscordActions } from 'src/common/enum/discord-action.enum';
 import { StrongLanguageCodes } from 'src/modules/language/enum/strong_language.enum';
 
 class StrongLanguageTriggerAction {
   @IsNotEmpty()
-  @IsEnum(LanguageFilterAction)
-  public action: LanguageFilterAction;
+  @IsEnum(DiscordActions)
+  public action: DiscordActions;
 
   @IsNotEmpty()
-  @ValidateIf((o) => o.action === LanguageFilterAction.REACT)
+  @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REACT)
   public reactEmoji: string;
 
   @IsNotEmpty()
-  @ValidateIf((o) => o.action === LanguageFilterAction.REPLY)
+  @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REPLY)
   public replyMessage: string;
 }
 
