@@ -1,7 +1,7 @@
-import { Type } from 'class-transformer';
 import {
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
   ValidateIf,
   ValidateNested,
@@ -10,12 +10,15 @@ import { AutoSailActionEvents } from 'src/modules/auto-sail/enum/auto-sail-actio
 
 class ActionMessageCreateConfig {
   @IsString()
+  @IsOptional()
   channelId: string;
 
   @IsString()
+  @IsOptional()
   messageType: string;
 
   @IsString()
+  @IsOptional()
   plainMessage: string;
 
   embed: any;
@@ -23,33 +26,25 @@ class ActionMessageCreateConfig {
 
 class ActionMessageReactConfig {
   @IsString()
+  @IsOptional()
   emoji: string;
 }
 
 class ActionMessageReplyConfig {
   @IsString()
+  @IsOptional()
   message: string;
 }
+
+type ActionMessageConfig =
+  | ActionMessageCreateConfig
+  | ActionMessageReactConfig
+  | ActionMessageReplyConfig;
 
 export class ActionConfigDto {
   @IsEnum(AutoSailActionEvents)
   action: AutoSailActionEvents;
 
-  @Type(() => ActionMessageCreateConfig)
-  @ValidateIf((obj) => obj.action === AutoSailActionEvents.MESSAGE_CREATE)
-  @ValidateNested()
   @IsNotEmpty()
-  messageCreateConfig: ActionMessageCreateConfig;
-
-  @Type(() => ActionMessageReplyConfig)
-  @ValidateIf((obj) => obj.action === AutoSailActionEvents.MESSAGE_REPLY)
-  @ValidateNested()
-  @IsNotEmpty()
-  messageReplyConfig: ActionMessageReplyConfig;
-
-  @Type(() => ActionMessageReactConfig)
-  @ValidateIf((obj) => obj.action === AutoSailActionEvents.MESSAGE_REACT)
-  @ValidateNested()
-  @IsNotEmpty()
-  messageReactConfig: ActionMessageReactConfig;
+  messageConfig: ActionMessageConfig;
 }
