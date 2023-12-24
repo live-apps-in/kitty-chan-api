@@ -1,4 +1,12 @@
-import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Inject,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ExtractContext,
   UserRequestContext,
@@ -24,5 +32,21 @@ export class AutoSailController {
     @Body() autoSailCreateDto: AutoSailCreateDto,
   ) {
     return this.autoSailService.create(guildId, userId, autoSailCreateDto);
+  }
+
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Patch(':id')
+  async update(
+    @ExtractContext() { guildId, userId }: UserRequestContext,
+    @Param('id') autoSailId: string,
+    @Body() autoSailCreateDto: AutoSailCreateDto,
+  ) {
+    await this.autoSailService.update(
+      guildId,
+      userId,
+      autoSailId,
+      autoSailCreateDto,
+    );
   }
 }

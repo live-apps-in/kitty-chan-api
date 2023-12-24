@@ -17,12 +17,7 @@ export class AutoSailCreateDto {
   @IsOptional()
   description: string;
 
-  @IsString()
-  @IsOptional()
   guildId: string;
-
-  @IsString()
-  @IsOptional()
   userId: string;
 
   @Type(() => AutoSailConfigDto)
