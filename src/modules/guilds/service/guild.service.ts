@@ -56,7 +56,9 @@ export class GuildService {
   }
 
   async getChannels(guildId: string) {
-    const channels = await this.discordClient.channel.fetchAll(guildId);
+    const channels = await this.discordClient.channel.fetchAll(guildId, {
+      expiry: 300,
+    });
 
     return channels
       .filter((obj) => obj.type === 0)
