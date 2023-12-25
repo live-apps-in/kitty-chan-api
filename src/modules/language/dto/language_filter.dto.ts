@@ -19,11 +19,11 @@ class LanguageFilterTriggerAction {
 
   @IsNotEmpty()
   @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REACT)
-  public reactEmoji: string;
+  public emoji: string;
 
   @IsNotEmpty()
   @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REACT)
-  public replyMessage: string;
+  public plainMessage: string;
 }
 
 class LanguageFilterConfig {

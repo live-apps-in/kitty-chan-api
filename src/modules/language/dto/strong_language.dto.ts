@@ -20,11 +20,11 @@ class StrongLanguageTriggerAction {
 
   @IsNotEmpty()
   @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REACT)
-  public reactEmoji: string;
+  public emoji: string;
 
   @IsNotEmpty()
   @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REPLY)
-  public replyMessage: string;
+  public plainMessage: string;
 }
 
 class StrongLanguageConfig {

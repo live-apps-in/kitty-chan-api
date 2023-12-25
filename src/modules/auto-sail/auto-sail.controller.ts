@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Inject,
   Param,
   Patch,
@@ -23,6 +24,13 @@ export class AutoSailController {
   constructor(
     @Inject(AutoSailService) private readonly autoSailService: AutoSailService,
   ) {}
+
+  @UseGuards(AuthGuard, GuildAccess)
+  @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)
+  @Get()
+  async get(@ExtractContext() { guildId }: UserRequestContext) {
+    return this.autoSailService.get(guildId);
+  }
 
   @UseGuards(AuthGuard, GuildAccess)
   @GuildRoles(ROLES.GUILD_OWNER, ROLES.GUILD_ADMIN)

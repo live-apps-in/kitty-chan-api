@@ -12,6 +12,10 @@ export class AutoSailService {
     @Inject(RedisService) private readonly redisService: RedisService,
   ) {}
 
+  async get(guildId: string) {
+    return this.autoSailModel.find({ guildId });
+  }
+
   async create(
     guildId: string,
     userId: string,
