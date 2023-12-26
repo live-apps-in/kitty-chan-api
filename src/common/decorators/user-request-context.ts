@@ -4,6 +4,7 @@ import { Req } from 'src/types/express.types';
 export interface UserRequestContext {
   userId: string;
   guildId: string;
+  sessionId: string;
 }
 
 /**Extract userId from userData
@@ -19,6 +20,7 @@ export const ExtractContext = createParamDecorator(
     return {
       userId: userData.userId,
       guildId: headers['x-guild-id'],
+      sessionId: userData.sessionId,
     } as UserRequestContext;
   },
 );

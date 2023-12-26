@@ -23,6 +23,18 @@ export class RedisService {
     this.redisClient.del(key);
   }
 
+  async getFromSet(key: string) {
+    return this.redisClient.smembers(key);
+  }
+
+  async addToSet(key: string, value: string) {
+    return this.redisClient.sadd(key, value);
+  }
+
+  async removeFromSet(key: string, value: string) {
+    return this.redisClient.srem(key, value);
+  }
+
   async ping() {
     return this.redisClient.ping();
   }

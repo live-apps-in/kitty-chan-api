@@ -8,6 +8,7 @@ import {
   Query,
   Patch,
   Body,
+  HttpCode,
 } from '@nestjs/common';
 import { GuildAccess } from 'src/modules/auth/guards/guild_access.guard';
 import { GuildRoles } from 'src/modules/auth/decorators/guild_roles.decorator';
@@ -36,6 +37,16 @@ export class GuildController {
     @Query('name') name: string,
   ) {
     return this.guildService.wildcardGuildUserSearchByName(guildId, name);
+  }
+
+  /**Sync User Guild data
+   * Tracks newly created Guilds and does User Guilds mapping
+   */
+  @UseGuards(AuthGuard)
+  @HttpCode(204)
+  @Get('sync')
+  async syncUserGuilds(@ExtractContext() { sessionId }: UserRequestContext) {
+    await this.guildService.syncUserGuilds(sessionId);
   }
 
   /**View All Channels of a Guild */

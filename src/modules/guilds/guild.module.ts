@@ -1,5 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { RedisService } from 'src/common/service/redis.service';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import {
   Features,
@@ -33,6 +34,7 @@ import { RedisProvider } from 'src/providers/redis.provider';
     DiscordProvider,
     GuildWsGateway,
     RedisProvider,
+    RedisService,
   ],
   exports: [
     GuildRepo,
