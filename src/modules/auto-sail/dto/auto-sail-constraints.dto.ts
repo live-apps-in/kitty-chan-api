@@ -7,18 +7,12 @@ export class AutoSailConstraintsDto {
   type: AutoSailConstraintsType;
 
   @IsOptional()
-  conditions: AutoSailConditionDTO[];
+  conditions: AutoSailConditionDto[];
 }
 
-interface MessageConditionDTO {
-  equals?: IValueCase;
-  notEquals?: IValueCase;
+interface AutoSailConditionDto {
+  equal?: IValueCase;
+  notEqual?: IValueCase;
+  gt?: IValueCase;
+  lt?: IValueCase;
 }
-
-interface TimeConditionDTO {
-  equals?: IValueCase;
-  greaterThan?: IValueCase;
-  lessThan?: IValueCase;
-}
-
-type AutoSailConditionDTO = MessageConditionDTO | TimeConditionDTO;

@@ -1,12 +1,14 @@
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
 import { AutoSailConfigDto } from 'src/modules/auto-sail/dto/auto-sail-config.dto';
+import { AutoSailTriggerType } from 'src/modules/auto-sail/enum/auto-sail-trigger-type.enum';
 
 export class AutoSailCreateDto {
   @IsString()
@@ -16,6 +18,10 @@ export class AutoSailCreateDto {
   @IsString()
   @IsOptional()
   description: string;
+
+  @IsEnum(AutoSailTriggerType)
+  @IsNotEmpty()
+  type: string;
 
   guildId: string;
   userId: string;
