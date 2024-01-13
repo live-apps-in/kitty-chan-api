@@ -1,5 +1,5 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { AutoSailActionEvents } from 'src/modules/auto-sail/enum/auto-sail-action.enum';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { DiscordActionTypes } from 'src/common/enum/discord-action.enum';
 
 class ActionMessageCreateConfig {
   @IsString()
@@ -35,9 +35,9 @@ type ActionMessageConfig =
   | ActionMessageReplyConfig;
 
 export class ActionConfigDto {
-  @IsEnum(AutoSailActionEvents)
-  action: AutoSailActionEvents;
+  @IsEnum(DiscordActionTypes)
+  action: DiscordActionTypes;
 
-  @IsNotEmpty()
+  @IsOptional()
   messageConfig: ActionMessageConfig;
 }

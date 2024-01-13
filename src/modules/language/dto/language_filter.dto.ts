@@ -5,26 +5,10 @@ import {
   IsBoolean,
   ValidateNested,
   ArrayNotEmpty,
-  IsEnum,
-  ValidateIf,
-  IsObject,
+  IsArray,
 } from 'class-validator';
 import { FeatureDefault } from 'src/common/dto/FeatureDefault.dto';
-import { DiscordActions } from 'src/common/enum/discord-action.enum';
-
-class LanguageFilterTriggerAction {
-  @IsNotEmpty()
-  @IsEnum(DiscordActions)
-  public action: DiscordActions;
-
-  @IsNotEmpty()
-  @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REACT)
-  public emoji: string;
-
-  @IsNotEmpty()
-  @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REACT)
-  public plainMessage: string;
-}
+import { ActionConfigDto } from 'src/common/dto/action-config.dto';
 
 class LanguageFilterConfig {
   @IsNotEmpty()
@@ -36,10 +20,10 @@ class LanguageFilterConfig {
   public languageLibId: string;
 
   @IsNotEmpty()
-  @IsObject()
-  @Type(() => LanguageFilterTriggerAction)
+  @IsArray()
+  @Type(() => ActionConfigDto)
   @ValidateNested()
-  public actionConfig: LanguageFilterTriggerAction;
+  public actionConfig: ActionConfigDto;
 }
 
 export class LanguageFilter extends FeatureDefault {

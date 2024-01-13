@@ -2,30 +2,14 @@ import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsEnum,
-  ValidateIf,
-  IsObject,
   ValidateNested,
   IsArray,
   IsMongoId,
 } from 'class-validator';
 import { Types } from 'mongoose';
 import { FeatureDefault } from 'src/common/dto/FeatureDefault.dto';
-import { DiscordActions } from 'src/common/enum/discord-action.enum';
+import { ActionConfigDto } from 'src/common/dto/action-config.dto';
 import { StrongLanguageCodes } from 'src/modules/language/enum/strong_language.enum';
-
-class StrongLanguageTriggerAction {
-  @IsNotEmpty()
-  @IsEnum(DiscordActions)
-  public action: DiscordActions;
-
-  @IsNotEmpty()
-  @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REACT)
-  public emoji: string;
-
-  @IsNotEmpty()
-  @ValidateIf((o) => o.action === DiscordActions.MESSAGE_REPLY)
-  public plainMessage: string;
-}
 
 class StrongLanguageConfig {
   @IsNotEmpty()
@@ -44,8 +28,8 @@ export class StrongLanguage extends FeatureDefault {
   languageConfig: StrongLanguageConfig[];
 
   @IsNotEmpty()
-  @IsObject()
-  @Type(() => StrongLanguageTriggerAction)
+  @IsArray()
+  @Type(() => ActionConfigDto)
   @ValidateNested()
-  public actionConfig: StrongLanguageTriggerAction;
+  actionConfig: ActionConfigDto[];
 }
