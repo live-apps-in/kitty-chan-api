@@ -2,6 +2,9 @@
 NODE_ENV=dev
 PORT=3001
 
+# Microservice
+KITTY_CHAN_GRPC_URL=0.0.0.0:5030
+
 # Discord Application Config
 DISCORD_CLIENT_ID=
 DISCORD_CLIENT_SECRET=
