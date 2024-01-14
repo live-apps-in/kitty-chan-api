@@ -1,15 +1,23 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { RedisService } from 'src/common/service/redis.service';
 import { AutoSailCreateDto } from 'src/modules/auto-sail/dto/auto-sail.dto';
 import { AutoSail } from 'src/modules/auto-sail/model/auto-sail.model';
+import { CronService } from 'src/modules/cron/cron.service';
+import { CronModuleTypes } from 'src/modules/cron/enum/cron-modules.enum';
 
 @Injectable()
 export class AutoSailService {
   constructor(
     @InjectModel('auto_sail') private readonly autoSailModel: Model<AutoSail>,
     @Inject(RedisService) private readonly redisService: RedisService,
+    @Inject(CronService) private readonly cronService: CronService,
   ) {}
 
   async get(guildId: string) {
@@ -32,17 +40,26 @@ export class AutoSailService {
       throw new ConflictException('AutoSail Configuration already exists!');
     }
 
-    const saveAuoSail = await new this.autoSailModel(autoSailCreateDto).save();
+    const createAutoSail = await new this.autoSailModel(
+      autoSailCreateDto,
+    ).save();
 
     await this.updateConfigInRedis(guildId);
 
-    return saveAuoSail;
+    if (autoSailCreateDto.config.cronConfig.expression) {
+      await this.createOrUpdateCronConfig(
+        createAutoSail._id,
+        autoSailCreateDto.config.cronConfig.expression,
+      );
+    }
+
+    return createAutoSail;
   }
 
   async update(
     guildId: string,
     userId: string,
-    autoSailId: string,
+    autoSailId: Types.ObjectId,
     autoSailCreateDto: AutoSailCreateDto,
   ) {
     autoSailCreateDto.guildId = guildId;
@@ -64,6 +81,16 @@ export class AutoSailService {
       },
     );
     await this.updateConfigInRedis(guildId);
+
+    const autoSail = await this.autoSailModel.findOne({ _id: autoSailId });
+
+    if (autoSailCreateDto.config.cronConfig.expression) {
+      await this.createOrUpdateCronConfig(
+        autoSailId,
+        autoSailCreateDto.config.cronConfig.expression,
+        autoSail.cronRefId,
+      );
+    }
   }
 
   private async updateConfigInRedis(guildId: string) {
@@ -82,6 +109,35 @@ export class AutoSailService {
         autoSailConfigKey,
         JSON.stringify(guildAutoSailConfig),
         30,
+      );
+    }
+  }
+
+  private async createOrUpdateCronConfig(
+    autoSailId: Types.ObjectId,
+    expression: string,
+    cronId?: Types.ObjectId,
+  ) {
+    if (cronId) {
+      await this.cronService.updateCronJob(cronId, {
+        module: CronModuleTypes.AUTOSAIL,
+        expression,
+      });
+    } else {
+      const createCronJob = await this.cronService.createCronJob({
+        module: CronModuleTypes.AUTOSAIL,
+        expression,
+      });
+
+      if (!createCronJob._id) {
+        throw new BadRequestException('Failed to create Cron job');
+      }
+
+      await this.autoSailModel.updateOne(
+        { _id: autoSailId },
+        {
+          $set: { cronRefId: createCronJob._id },
+        },
       );
     }
   }

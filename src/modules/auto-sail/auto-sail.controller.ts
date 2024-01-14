@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { Types } from 'mongoose';
 import {
   ExtractContext,
   UserRequestContext,
@@ -53,7 +54,7 @@ export class AutoSailController {
     await this.autoSailService.update(
       guildId,
       userId,
-      autoSailId,
+      new Types.ObjectId(autoSailId),
       autoSailCreateDto,
     );
   }

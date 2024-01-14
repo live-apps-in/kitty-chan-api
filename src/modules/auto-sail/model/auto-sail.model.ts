@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
 import { AutoSailConfigDto } from 'src/modules/auto-sail/dto/auto-sail-config.dto';
+import { AutoSailTriggerType } from 'src/modules/auto-sail/enum/auto-sail-trigger-type.enum';
 
 @Schema()
 export class AutoSail {
@@ -10,6 +12,9 @@ export class AutoSail {
   description: string;
 
   @Prop()
+  type: AutoSailTriggerType;
+
+  @Prop()
   guildId: string;
 
   @Prop()
@@ -17,6 +22,9 @@ export class AutoSail {
 
   @Prop({ type: Object })
   config: AutoSailConfigDto;
+
+  @Prop()
+  cronRefId: Types.ObjectId;
 
   @Prop({ default: false })
   isActive: boolean;

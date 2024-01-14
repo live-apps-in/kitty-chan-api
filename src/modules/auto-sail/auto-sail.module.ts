@@ -5,6 +5,7 @@ import { AuthModule } from 'src/modules/auth/auth.module';
 import { AutoSailController } from 'src/modules/auto-sail/auto-sail.controller';
 import { AutoSailService } from 'src/modules/auto-sail/auto-sail.service';
 import { AutoSailSchema } from 'src/modules/auto-sail/model/auto-sail.model';
+import { CronModule } from 'src/modules/cron/cron.module';
 import { GuildModule } from 'src/modules/guilds/guild.module';
 import { UserModule } from 'src/modules/users/user.module';
 import { RedisProvider } from 'src/providers/redis.provider';
@@ -14,6 +15,7 @@ import { RedisProvider } from 'src/providers/redis.provider';
     AuthModule,
     GuildModule,
     UserModule,
+    CronModule,
     MongooseModule.forFeature([{ name: 'auto_sail', schema: AutoSailSchema }]),
   ],
   providers: [AutoSailService, RedisService, RedisProvider],

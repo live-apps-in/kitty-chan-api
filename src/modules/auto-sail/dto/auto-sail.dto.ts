@@ -21,7 +21,7 @@ export class AutoSailCreateDto {
 
   @IsEnum(AutoSailTriggerType)
   @IsNotEmpty()
-  type: string;
+  type: AutoSailTriggerType;
 
   guildId: string;
   userId: string;
@@ -30,6 +30,8 @@ export class AutoSailCreateDto {
   @ValidateNested()
   @IsNotEmpty()
   config: AutoSailConfigDto;
+
+  cronRefId: string;
 
   @IsBoolean()
   @IsOptional()

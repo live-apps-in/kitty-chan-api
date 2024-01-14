@@ -12,6 +12,7 @@ import { AnalyticsModule } from 'src/modules/analytics/analytics.module';
 import { RoleModule } from 'src/modules/roles/role.module';
 import { CommunityModule } from 'src/modules/community/community.module';
 import { AutoSailModule } from 'src/modules/auto-sail/auto-sail.module';
+import { CronModule } from 'src/modules/cron/cron.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AutoSailModule } from 'src/modules/auto-sail/auto-sail.module';
     AnalyticsModule,
     CommunityModule,
     AutoSailModule,
+    CronModule,
   ],
   controllers: [AppController],
   providers: [],
