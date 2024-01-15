@@ -120,7 +120,6 @@ export class AutoSailService {
   ) {
     if (cronId) {
       await this.cronService.updateCronJob(cronId, {
-        module: CronModuleTypes.AUTOSAIL,
         expression,
       });
     } else {
