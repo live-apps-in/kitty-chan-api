@@ -47,7 +47,7 @@ export class AutoSailService {
 
     await this.updateConfigInRedis(guildId);
 
-    if (autoSailCreateDto.config.cronConfig.expression) {
+    if (autoSailCreateDto.config.cronConfig?.expression) {
       await this.createOrUpdateCronConfig(
         createAutoSail._id,
         autoSailCreateDto.config.cronConfig,
@@ -85,7 +85,7 @@ export class AutoSailService {
 
     const autoSail = await this.autoSailModel.findOne({ _id: autoSailId });
 
-    if (autoSailCreateDto.config.cronConfig.expression) {
+    if (autoSailCreateDto.config.cronConfig?.expression) {
       await this.createOrUpdateCronConfig(
         autoSailId,
         autoSailCreateDto.config.cronConfig,

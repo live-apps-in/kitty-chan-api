@@ -1,12 +1,13 @@
-import { IsEnum, IsOptional } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
 import { IValueCase } from 'src/common/interface/value-case.interface';
 import { AutoSailConstraintsType } from 'src/modules/auto-sail/enum/auto-sail-constraints-type.enum';
 
 export class AutoSailConstraintsDto {
   @IsEnum(AutoSailConstraintsType)
+  @IsNotEmpty()
   type: AutoSailConstraintsType;
 
-  @IsOptional()
+  @IsNotEmpty()
   conditions: AutoSailConditionDto[];
 }
 
