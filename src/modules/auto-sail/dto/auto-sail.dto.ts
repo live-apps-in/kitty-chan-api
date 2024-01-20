@@ -31,8 +31,6 @@ export class AutoSailCreateDto {
   @IsNotEmpty()
   config: AutoSailConfigDto;
 
-  cronRefId: string;
-
   @IsBoolean()
   @IsOptional()
   isActive: boolean;

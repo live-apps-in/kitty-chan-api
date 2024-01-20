@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
 import { AutoSailConfigDto } from 'src/modules/auto-sail/dto/auto-sail-config.dto';
 import { AutoSailTriggerType } from 'src/modules/auto-sail/enum/auto-sail-trigger-type.enum';
 
@@ -22,9 +21,6 @@ export class AutoSail {
 
   @Prop({ type: Object })
   config: AutoSailConfigDto;
-
-  @Prop()
-  cronRefId: Types.ObjectId;
 
   @Prop({ default: false })
   isActive: boolean;

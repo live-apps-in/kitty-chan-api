@@ -10,6 +10,7 @@ import { RedisService } from 'src/common/service/redis.service';
 import { AutoSailCreateDto } from 'src/modules/auto-sail/dto/auto-sail.dto';
 import { AutoSail } from 'src/modules/auto-sail/model/auto-sail.model';
 import { CronService } from 'src/modules/cron/cron.service';
+import { CronConfigDto } from 'src/modules/cron/dto/cron-config.dto';
 import { CronModuleTypes } from 'src/modules/cron/enum/cron-modules.enum';
 
 @Injectable()
@@ -49,7 +50,7 @@ export class AutoSailService {
     if (autoSailCreateDto.config.cronConfig.expression) {
       await this.createOrUpdateCronConfig(
         createAutoSail._id,
-        autoSailCreateDto.config.cronConfig.expression,
+        autoSailCreateDto.config.cronConfig,
       );
     }
 
@@ -87,8 +88,8 @@ export class AutoSailService {
     if (autoSailCreateDto.config.cronConfig.expression) {
       await this.createOrUpdateCronConfig(
         autoSailId,
-        autoSailCreateDto.config.cronConfig.expression,
-        autoSail.cronRefId,
+        autoSailCreateDto.config.cronConfig,
+        autoSail.config.cronConfig.cronRefId,
       );
     }
   }
@@ -115,17 +116,15 @@ export class AutoSailService {
 
   private async createOrUpdateCronConfig(
     autoSailId: Types.ObjectId,
-    expression: string,
+    cronConfig: CronConfigDto,
     cronId?: Types.ObjectId,
   ) {
     if (cronId) {
-      await this.cronService.updateCronJob(cronId, {
-        expression,
-      });
+      await this.cronService.updateCronJob(cronId, cronConfig);
     } else {
       const createCronJob = await this.cronService.createCronJob({
         module: CronModuleTypes.AUTOSAIL,
-        expression,
+        expression: cronConfig.expression,
       });
 
       if (!createCronJob._id) {
@@ -135,7 +134,7 @@ export class AutoSailService {
       await this.autoSailModel.updateOne(
         { _id: autoSailId },
         {
-          $set: { cronRefId: createCronJob._id },
+          $set: { 'config.cronConfig.cronRefId': createCronJob._id },
         },
       );
     }
